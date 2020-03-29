@@ -1,9 +1,14 @@
 import React from 'react';
-import { FlatList, ActivityIndicator, View, Image, StyleSheet, Alert, ToastAndroid } from 'react-native';
-import { Card, CardItem, Body, Text } from 'native-base';
+import { FlatList, ActivityIndicator, View, Image, StyleSheet, Alert, ToastAndroid, Text, TouchableOpacity } from 'react-native';
+import { Card, CardItem, Body } from 'native-base';
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+import Detalhes from './detalhes'
 import ip from '../components/ip';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 console.disableYellowBox = true;
-export default class EmCartaz extends React.Component {
+
+class EmCartaz extends React.Component {
 
     constructor(props) {
         super(props);
@@ -38,7 +43,10 @@ export default class EmCartaz extends React.Component {
             });
     }
 
-
+    _detalhes = async () => {
+        this.props.navigation.navigate('Details');
+        console.log('confimacao')
+    };
 
     render() {
 
@@ -56,14 +64,19 @@ export default class EmCartaz extends React.Component {
                     numColumns={2}
                     data={this.state.dataSource}
                     renderItem={({ item }) =>
-                        <View style={{ backgroundColor: '#000000', height: 240, borderColor: 'transparent' }} >
-                            <View style={{ backgroundColor: '#000000', height: 250, marginLeft: 5 }}><Image source={{ uri: item.foto }} style={{ height: 300, width: 200 }} /></View>
-                        </View>
+                        <TouchableHighlight onPress={() => {
+                            this.props.navigation.navigate('Details', {
+                                itemId: item.id_films,
+                            });
+                        }}>
+                            <View style={{ backgroundColor: '#000000', height: 240, borderColor: 'transparent' }} >
+                                <View style={{ backgroundColor: '#000000', height: 250, marginLeft: 5 }} >
+                                    <Image source={{ uri: item.foto }} style={{ height: 240, width: 200 }} /></View>
+                            </View>
+                        </TouchableHighlight>
                     }
                     keyExtractor={item => item.id_films}
                 />
-
-
             </View>
         );
     }
@@ -86,3 +99,21 @@ const styles = StyleSheet.create({
     }
 
 })
+const RootStack = createStackNavigator(
+    {
+        Emcartaz: EmCartaz,
+        Details: Detalhes,
+    },
+    {
+        initialRouteName: 'Emcartaz',
+        headerMode: 'none'
+    }
+);
+
+const AppContainer = createAppContainer(RootStack);
+
+export default class Cartaz extends React.Component {
+    render() {
+        return <AppContainer />;
+    }
+}

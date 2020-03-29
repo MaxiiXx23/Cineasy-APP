@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Image, View, ActivityIndicator, StyleSheet } from 'react-native';
+
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Tabs, Tab, TabHeading, Container, Header, Button, Item, Input, Content, Card, CardItem, Body, Text } from 'native-base';
-import Emcartaz from '../categorias/EmCartaz';
+import Cartaz from '../categorias/EmCartaz';
 export default class filmes extends Component {
   render() {
     return (
@@ -22,7 +23,7 @@ export default class filmes extends Component {
         </Header>
         <Tabs locked={true} tabBarUnderlineStyle={{ backgroundColor: "yellow" }}>
           <Tab heading={<TabHeading style={style.tabHeading}><Text>Em cartaz</Text></TabHeading>}>
-            <Emcartaz />
+            <Cartaz />
           </Tab>
           <Tab heading={<TabHeading style={style.tabHeading}><Text>Em Alta</Text></TabHeading>}>
             <View style={[styles.container, styles.horizontal]}>

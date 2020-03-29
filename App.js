@@ -11,10 +11,11 @@ import home from './src/telas/home';
 import cadastro from './src/telas/cadastro';
 import filmes from './src/telas/filmes';
 import drawer from './src/drawer/drawer';
-import editarPerfil from './src/drawer/editarPerfil';
+import Cinemas from './src/telas/cinemas';
+import Detalhes from './src/categorias/detalhes'
 
 // rotas do aplicativo
-
+// colocar o ID do usuario no asyncStorage e usar nas rotas
 const Tabs = createBottomTabNavigator({
   Feed: {
     screen: home,
@@ -28,6 +29,12 @@ const Tabs = createBottomTabNavigator({
       tabBarLabel: 'filmes',
     },
   },
+  Cinemas:{
+    screen: Cinemas,
+    navigationOptions:{
+      tabBarLabel:'Cinemas'
+    }
+  },
   Perfil: {
     screen: drawer,
     navigationOptions: {
@@ -36,7 +43,10 @@ const Tabs = createBottomTabNavigator({
   },
 });
 
-
+const Stacks = createStackNavigator({
+  detalhes:
+     Detalhes,
+});
 
 const cadastroStack = createStackNavigator({SignIn: login,SignUp: cadastro},{headerMode:'none'});
 const AuthStack = createStackNavigator({ SignIn: login },{
@@ -49,7 +59,8 @@ export default createAppContainer(
       AuthLoading: AuthLoadingScreen,
       App: Tabs,
       Auth: AuthStack,
-      cadastro : cadastroStack
+      cadastro : cadastroStack,
+      Detalhes: Stacks
     },
     {
       initialRouteName: 'AuthLoading'

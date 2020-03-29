@@ -11,8 +11,34 @@ export default class drawerCustom extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            fotoUser:''
         };
     }
+    async componentDidMount() {
+        const id = await AsyncStorage.getItem('idUsuario');
+        //console.log(id)
+        const api = ip;
+        return fetch('http://' + api + ':3000/usuarios/dados/' + id)
+            .then((response) => response.json())
+            .then((responseJson) => {
+                this.setState({
+                    fotoUser: responseJson[0].fotoUser,
+
+                }, function () {
+
+                });
+                //console.log(this.state.fotoUser)
+            })
+            .catch((error) => {
+                //console.error(error);
+                ToastAndroid.showWithGravity(
+                    'Falha na conexão.',
+                    ToastAndroid.LONG,
+                    ToastAndroid.CENTER,
+                );
+            });
+    }
+
     navigateToScreen = (route) => () => {
         const navigateAction = NavigationActions.navigate({
             routeName: route
@@ -39,7 +65,7 @@ export default class drawerCustom extends Component {
             <Container style={{ backgroundColor: '#000000' }}>
                 <View style={styles.ViewFoto}>
                     <Icon name="arrow-back" size={20} style={{ color: '#ffffff' }} onPress={this._voltar('Perfil')} />
-                    <Thumbnail source={{ uri: 'http://' + api + ':3000/imgs/1583688845268-images.jpeg' }} style={styles.perfil} />
+                    <Thumbnail source={{ uri:'http://' + api + ':3000/imgs/' + this.state.fotoUser }} style={styles.perfil} />
                 </View>
                 <View>
                     <Text style={styles.config}>
@@ -64,17 +90,22 @@ export default class drawerCustom extends Component {
                     </ListItem>
                     <ListItem style={styles.listItem}>
                         <Text style={styles.texto} onPress={this.navigateToScreen('EditarPerfil')}>
-                            Privacidade
+                            Formas de Pagamento
                         </Text>
                     </ListItem>
                     <ListItem style={styles.listItem}>
                         <Text style={styles.texto} onPress={this.navigateToScreen('EditarPerfil')}>
-                            Feedback
+                            Privacidade
                         </Text>
                     </ListItem>
                     <ListItem style={styles.listItem}>
                         <Text style={styles.conta}>
                             Sobre
+                        </Text>
+                    </ListItem>
+                    <ListItem style={styles.listItem}>
+                        <Text style={styles.texto} onPress={this.navigateToScreen('EditarPerfil')}>
+                            Feedback
                         </Text>
                     </ListItem>
                     <ListItem style={styles.listItem}>
@@ -89,7 +120,7 @@ export default class drawerCustom extends Component {
                                 <Icon name="exit-to-app" size={30} style={styles.btnIcon} />
                                 <Text style={styles.btnText}>Sair do App</Text>
                             </View>
-                            </TouchableHighlight>
+                        </TouchableHighlight>
                     </ListItem>
                 </List>
             </Container>
@@ -104,7 +135,7 @@ const styles = StyleSheet.create({
     },
     texto: {
         color: '#FFFFFF',
-        padding:10
+        padding: 8.5
     },
     listItem: {
         borderBottomColor: '#000000'
@@ -158,6 +189,6 @@ const styles = StyleSheet.create({
     btnIcon: {
         height: 25,
         width: 25,
-        color:'#000000'
+        color: '#000000'
     }
 })

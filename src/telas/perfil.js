@@ -1,16 +1,49 @@
 import React, { Component } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { Image, View, StyleSheet, ImageBackground, TouchableHighlight, AsyncStorage, Button, ScrollView } from 'react-native';
+import { Image, View, StyleSheet, ImageBackground, TouchableHighlight, AsyncStorage, Button, ScrollView, ToastAndroid } from 'react-native';
 import { Container, Thumbnail, Text, } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import ip from '../components/ip';
 export default class Perfil extends Component {
   static navigationOptions = {
-    drawerLabel: 'Perfil'
+    drawerLabel: 'Perfil',
+
   };
   constructor(props) {
     super(props);
+    this.state = {
+      text: '',
+      fotoUser: '',
+      frase: '',
+      capaUser:''
+    }
+  }
+   async componentDidMount() {
+    const id = await AsyncStorage.getItem('idUsuario');
+    //console.log(id)
+    const api = ip;
+    return fetch('http://' + api + ':3000/usuarios/dados/'+id)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          text: responseJson[0].nome,
+          fotoUser: responseJson[0].fotoUser,
+          frase: responseJson[0].frase,
+          capaUser: responseJson[0].capaUser
 
+        }, function () {
+
+        });
+        //console.log(this.state.dataSource[0].nome)
+      })
+      .catch((error) => {
+        //console.error(error);
+        ToastAndroid.showWithGravity(
+          'Falha na conexão.',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+        );
+      });
   }
   _signOutAsync = async () => {
     await AsyncStorage.clear();
@@ -23,14 +56,14 @@ export default class Perfil extends Component {
       <>
         <Container style={{ backgroundColor: '#191919' }}>
           <View>
-            <ImageBackground source={{ uri: imgBack }} style={[perfil2.capa]}>
+            <ImageBackground source={{ uri: this.state.capaUser }} style={[perfil2.capa]}>
             </ImageBackground>
-            <Thumbnail source={{ uri: 'http://'+api+':3000/imgs/1583688845268-images.jpeg' }} style={[perfil2.foto]} />
+            <Thumbnail source={{ uri: 'http://' + api + ':3000/imgs/' + this.state.fotoUser }} style={[perfil2.foto]} />
             <View>
               <Text style={[perfil2.info]}>
-                Max Jonatas
-            </Text>
-              <Text style={[perfil2.frase]}> "Com grandes poderes vem grandes responsabilidades."</Text>
+                {this.state.text}
+              </Text>
+              <Text style={[perfil2.frase]}> {this.state.frase}</Text>
             </View>
           </View>
           <Grid style={{ marginTop: 45 }}>
@@ -138,24 +171,24 @@ const perfil2 = StyleSheet.create({
     color: 'white',
     marginLeft: '30%'
   },
-  notificacao:{
+  notificacao: {
     color: '#FFD700',
     marginLeft: '2%',
     marginTop: '2%'
   },
-  TextNotf:{
-    color:'white',
-    marginLeft:'2%',
-    marginTop:'10%',
-    textAlign:'center'
+  TextNotf: {
+    color: 'white',
+    marginLeft: '2%',
+    marginTop: '10%',
+    textAlign: 'center'
   },
-  blocoNoft:{
+  blocoNoft: {
     backgroundColor: '#303030',
     height: 200,
     width: 400,
     borderRadius: 15,
     marginTop: 3,
-    marginLeft:5
+    marginLeft: 5
   }
 
 

@@ -36,6 +36,12 @@ target 'Cineasy' do
 
   pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
 
+  pod 'react-native-maps', :path => '../node_modules/react-native-maps'
+
+  pod 'react-native-geolocation', :path => '../node_modules/@react-native-community/geolocation'
+
+  pod 'RCTYouTube', :path => '../node_modules/react-native-youtube'
+
   target 'CineasyTests' do
     inherit! :search_paths
     # Pods for testing

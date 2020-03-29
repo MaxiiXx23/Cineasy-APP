@@ -62,10 +62,13 @@ export default class login extends React.Component {
             );
           }
           let result = responseJson.token;
+          //console.log(responseJson.id)
           this.setState({ Token: result });
-          //console.log(this.state.Token);
+          this.setState({ idUsuario: responseJson.id })
+          //console.log(result)
+          //console.log(responseJson.id);
+          AsyncStorage.multiSet([['userToken', JSON.stringify(responseJson.token)], ['idUsuario', JSON.stringify(responseJson.id)]]);
         })
-      await AsyncStorage.setItem('userToken', this.state.Token);
       this.props.navigation.navigate('App');
     }
   }

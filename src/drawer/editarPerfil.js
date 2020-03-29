@@ -1,7 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, Image, ToastAndroid } from 'react-native';
+import { StyleSheet, Text, ImageBackground, View, Button, Image, ToastAndroid, AsyncStorage, KeyboardAvoidingView, TextInput, ScrollView } from 'react-native';
+import { Container, Thumbnail, Label, Content, Form, Item, Input } from 'native-base';
 import ip from '../components/ip';
 import ImagePicker from 'react-native-image-picker';
+import { TextInputMask } from 'react-native-masked-text';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 export default class EditarPerfil extends React.Component {
   static navigationOptions = {
     drawerLabel: 'Editar Perfil'
@@ -10,9 +13,43 @@ export default class EditarPerfil extends React.Component {
     super(props);
     this.state = {
       filePath: {},
+      frase: '',
+      value: '',
+      international: '',
+      text: '',
+      uriCelular:'https://i1.wp.com/animasso.com.br/wp-content/uploads/2018/05/saitama-ok-aficionados-0.jpg?resize=600%2C384'
     };
   }
-  chooseFile = () => {
+  // component para puxar os dados ao entrar na tela
+  async componentDidMount() {
+    const id = await AsyncStorage.getItem('idUsuario');
+    //console.log(id)
+    const api = ip;
+    return fetch('http://' + api + ':3000/usuarios/dados/' + id)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          nome: responseJson[0].nome,
+          fotoUser: responseJson[0].fotoUser,
+          frase: responseJson[0].frase,
+          capaUser: responseJson[0].capaUser
+
+        }, function () {
+
+        });
+        //console.log(this.state.dataSource[0].nome)
+      })
+      .catch((error) => {
+        //console.error(error);
+        ToastAndroid.showWithGravity(
+          'Falha na conexão.',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+        );
+      });
+  }
+  // função para chamar a tirar foto ou selecionar imagem do celular
+  _EscolheImg = () => {
     var options = {
       title: 'Selecione uma imagem',
       customButtons: [
@@ -43,11 +80,13 @@ export default class EditarPerfil extends React.Component {
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
         this.setState({
           filePath: source,
+          uriCelular: source.uri
         });
-        // console.log(this.state.filePath)
+        console.log(this.state.filePath)
       }
     });
   };
+  //função para upload de imagem
   _uploadImg = async () => {
     const api = ip
     dadosImg = this.state.filePath
@@ -77,7 +116,7 @@ export default class EditarPerfil extends React.Component {
             ToastAndroid.LONG,
             ToastAndroid.CENTER,
           );
-        }else{
+        } else {
           ToastAndroid.showWithGravity(
             'Uplaod nao efetuado',
             ToastAndroid.LONG,
@@ -89,37 +128,78 @@ export default class EditarPerfil extends React.Component {
 
   }
   render() {
+    const api = ip;
     return (
-      <View style={styles.container}>
-        <View style={styles.container}>
-          {/*<Image 
-          source={{ uri: this.state.filePath.path}} 
-          style={{width: 100, height: 100}} />*/}
-          <Image
-            source={{
-              uri: 'data:image/jpeg;base64,' + this.state.filePath.data,
-            }}
-            style={{ width: 100, height: 100 }}
-          />
-          <Image
-            source={{ uri: this.state.filePath.uri }}
-            style={{ width: 250, height: 250 }}
-          />
-          <Text style={{ alignItems: 'center' }}>
-            {this.state.filePath.uri}
-          </Text>
-          <Button title="Foto" onPress={this.chooseFile.bind(this)} />
-          <Button title="Upload" onPress={this._uploadImg} />
-        </View>
-      </View>
+      <Container>
+        <KeyboardAvoidingView style={styles.container}>
+          <View>
+            <ImageBackground source={{ uri: this.state.capaUser }} style={styles.capa}></ImageBackground>
+            <Thumbnail large source={{ uri: this.state.uriCelular }} style={styles.img} />
+            <Icon name="camera-alt" size={30} style={styles.icons} onPress={this._EscolheImg} />
+          </View>
+          <ScrollView style={styles.lista}>
+            <Text style={styles.text}> Nome </Text>
+            <TextInput style={styles.input} defaultValue={this.state.nome} />
+            <Text style={styles.text}> Frase </Text>
+            <TextInput style={styles.input} defaultValue={this.state.frase} />
+            <Text style={styles.text}> Telefone </Text>
+            <TextInputMask style={styles.input}
+              placeholder='(xx)xxxxx-xxxx'
+              placeholderTextColor="#FFFFFF" 
+              type={'cel-phone'}
+              options={{
+                maskType: 'BRL',
+                withDDD: true,
+                dddMask: '(99) '
+              }}
+              value={this.state.international}
+              onChangeText={text => {
+                this.setState({
+                  international: text
+                })
+              }}
+            />
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </Container>
     );
   }
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#000000',
   },
+  img: {
+    marginLeft: '42%',
+    marginTop: '-35%'
+  },
+  item: {
+    marginBottom: 15,
+  },
+  input: {
+    color: '#FFFFFF',
+    borderWidth: 1,
+    borderBottomColor: '#FFD700',
+    marginBottom: 5,
+  },
+  capa: {
+    height: 200,
+    width: 410
+  },
+  text: {
+    color: '#FFD700',
+    fontFamily: 'Arial',
+    fontWeight: 'bold',
+  },
+  lista: {
+    marginTop: '22%',
+    flex: 1
+  },
+  icons:{
+    color:'#FFD700',
+    marginTop:-35,
+    marginLeft:'57%'
+  }
+
 });
