@@ -16,7 +16,7 @@ export default class TermosUso extends Component {
     return (
       <View>
         <YouTube
-          videoId="jfVTJm9NilA" // The YouTube video ID
+          videoId="adkmIMpHyfU" // The YouTube video ID
           apiKey="AIzaSyANHo2FO1TIvJX49TJT_CYjmZWFFt3XMNk"
           play={true}
           fullscreen={true}

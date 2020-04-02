@@ -3,7 +3,8 @@ import { FlatList, ActivityIndicator, View, Image, StyleSheet, Alert, ToastAndro
 import { Card, CardItem, Body } from 'native-base';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import Detalhes from './detalhes'
+import Detalhes from './detalhes';
+import Trailler from './trailler';
 import ip from '../components/ip';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 console.disableYellowBox = true;
@@ -23,7 +24,7 @@ class EmCartaz extends React.Component {
     }
     componentDidMount() {
         const api = ip;
-        return fetch('http://' + api + ':3000/filmes/films/5')
+        return fetch('http://' + api + ':3000/filmes/films/2')
             .then((response) => response.json())
             .then((responseJson) => {
                 this.setState({
@@ -49,7 +50,7 @@ class EmCartaz extends React.Component {
     };
 
     render() {
-
+        const api = ip;
         if (this.state.isLoading) {
             return (
                 <View style={[styles.container, styles.horizontal]}>
@@ -59,7 +60,7 @@ class EmCartaz extends React.Component {
         }
 
         return (
-            <View style={{ flex: 1, paddingTop: 10, backgroundColor: '#000000' }}>
+            <View style={{ flex: 1, paddingTop: 10, backgroundColor: '#191919' }}>
                 <FlatList
                     numColumns={2}
                     data={this.state.dataSource}
@@ -69,9 +70,9 @@ class EmCartaz extends React.Component {
                                 itemId: item.id_films,
                             });
                         }}>
-                            <View style={{ backgroundColor: '#000000', height: 240, borderColor: 'transparent' }} >
-                                <View style={{ backgroundColor: '#000000', height: 250, marginLeft: 5 }} >
-                                    <Image source={{ uri: item.foto }} style={{ height: 240, width: 200 }} /></View>
+                            <View style={{ backgroundColor: '#191919', height: 240, borderColor: 'transparent' }} >
+                                <View style={{ backgroundColor: '#191919', height: 250, marginLeft: 5 }} >
+                                    <Image source={{ uri:'http://' + api + ':3000/filmes/poster/' + item.foto }} style={{ height: 240, width: 200 }} /></View>
                             </View>
                         </TouchableHighlight>
                     }
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        backgroundColor: '#000000'
+        backgroundColor: '#191919'
     },
     horizontal: {
         flexDirection: 'row',
@@ -103,6 +104,7 @@ const RootStack = createStackNavigator(
     {
         Emcartaz: EmCartaz,
         Details: Detalhes,
+        Trailer: Trailler
     },
     {
         initialRouteName: 'Emcartaz',

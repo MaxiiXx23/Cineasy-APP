@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, Button, AsyncStorage, StatusBar, KeyboardAvoidingView, Image, ImageBackground, TextInput, StyleSheet, TouchableOpacity, Alert, ToastAndroid } from 'react-native';
 import ip from '../components/ip';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default class login extends React.Component {
 
@@ -89,10 +90,13 @@ export default class login extends React.Component {
             </View>
             <View style={
               styles.ContainerInputs}>
-              <TextInput style={styles.Inputs} keyboardType='email-address'
-                placeholder="E-mail:"
-                onChangeText={TextInputEmail => this.setState({ TextInputEmail })}
-              />
+              <View style={styles.searchSection}>
+                <Icon  name="person" size={30} color="#000"/>
+                <TextInput style={styles.Inputs} keyboardType='email-address'
+                  placeholder="E-mail:"
+                  onChangeText={TextInputEmail => this.setState({ TextInputEmail })}
+                />
+              </View>
               <TextInput style={styles.Inputs} secureTextEntry={true}
                 placeholder="Senha:"
                 onChangeText={TextInputSenha => this.setState({ TextInputSenha })}
@@ -182,5 +186,10 @@ const styles = StyleSheet.create({
     color: 'black',
     marginBottom: 3,
     marginLeft: '45%'
-  }
+  },
+  searchSection: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+}
 });
