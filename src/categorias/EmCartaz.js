@@ -13,23 +13,22 @@ class EmCartaz extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { isLoading: true, load: 2 }
-    }
-    Loading = () => {
-        if (this.onEndReachedThreshold < 0, 1) {
-            this.setState({
-                load: 10
-            })
-        }
+        this.state = { isLoading: true,loading:false, page: 6 }
     }
     componentDidMount() {
+        this.loadRepositories();
+    }
+    loadRepositories = async () =>{
+        if (this.state.loading) return;
+        const { page } = this.state;
         const api = ip;
-        return fetch('http://' + api + ':3000/filmes/films/2')
+        return fetch(`http://${api}:3000/filmes/films/${page}`)
             .then((response) => response.json())
             .then((responseJson) => {
                 this.setState({
                     isLoading: false,
                     dataSource: responseJson,
+                    page: page + 1,
                 }, function () {
 
                 });
@@ -43,10 +42,18 @@ class EmCartaz extends React.Component {
                 );
             });
     }
+    renderFooter = () => {
+        if (!this.state.loading) return null;
+        return (
+          <View style={styles.loading}>
+            <ActivityIndicator size="small" color="#FFD700"/>
+          </View>
+        );
+      }; 
 
     _detalhes = async () => {
         this.props.navigation.navigate('Details');
-        console.log('confimacao')
+        //console.log('confimacao')
     };
 
     render() {
@@ -70,13 +77,16 @@ class EmCartaz extends React.Component {
                                 itemId: item.id_films,
                             });
                         }}>
-                            <View style={{ backgroundColor: '#191919', height: 240, borderColor: 'transparent' }} >
-                                <View style={{ backgroundColor: '#191919', height: 250, marginLeft: 5 }} >
+                            <View style={{ backgroundColor: '#191919', height: 240, borderColor: 'transparent',marginBottom:5 }} >
+                                <View style={{ backgroundColor: '#191919', height: 250, marginLeft: 5}} >
                                     <Image source={{ uri:'http://' + api + ':3000/filmes/poster/' + item.foto }} style={{ height: 240, width: 200 }} /></View>
                             </View>
                         </TouchableHighlight>
                     }
                     keyExtractor={item => item.id_films}
+                    onEndReached={this.loadRepositories}
+                    ListFooterComponent={this.renderFooter}
+                    onEndReachedThreshold={0.1}
                 />
             </View>
         );
@@ -97,6 +107,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'white',
         marginHorizontal: 2
+    },
+    loading:{
+        backgroundColor: '#191919',
+        justifyContent: 'center'
     }
 
 })
