@@ -1,24 +1,21 @@
-import React, { Component } from 'react';
-import { View, Text } from 'react-native';
 
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import {createDrawerNavigator} from 'react-navigation-drawer';
 import login from './src/telas/login';
 import AuthLoadingScreen from './src/telas/AuthLoadingScreen';
-import home from './src/telas/home';
 import cadastro from './src/telas/cadastro';
 import filmes from './src/telas/filmes';
 import drawer from './src/drawer/drawer';
 import Cinemas from './src/telas/cinemas';
 import Detalhes from './src/categorias/detalhes'
+import NevegaHome from './src/components/navegaHome';
 
 // rotas do aplicativo
 // colocar o ID do usuario no asyncStorage e usar nas rotas
 const Tabs = createBottomTabNavigator({
   Feed: {
-    screen: home,
+    screen: NevegaHome,
     navigationOptions: {
       tabBarLabel: 'Feed',
     },

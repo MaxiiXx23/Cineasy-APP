@@ -1,31 +1,37 @@
 
 import React from 'react';
-import { FlatList, Image, ActivityIndicator, Text, View, Alert,StyleSheet,ToastAndroid } from 'react-native';
+import { FlatList, Image, ActivityIndicator, Text, View, Alert, StyleSheet, ToastAndroid } from 'react-native';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Button, Left, Body, Right } from 'native-base';
 import ip from '../components/ip';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-export default class home extends React.Component {
-    
+export default class Home extends React.Component {
+
   constructor(props) {
     super(props);
-    this.state = { isLoading: true,
-      api: ip
+    this.state = {
+      isLoading: true,
+      api: ip,
+      page: 2
     }
   }
 
   componentDidMount() {
-    const api= ip;
-    return fetch('http://'+api+':3000/posts/ver/2')
+    this.loadRepositories();
+  }
+  loadRepositories = async () => {
+    if (this.state.loading) return;
+    const { page } = this.state;
+    const api = ip;
+    return fetch(`http://${api}:3000/posts/ver/${page}`)
       .then((response) => response.json())
       .then((responseJson) => {
-        //console.log(responseJson[0].id_post);
         this.setState({
           isLoading: false,
           dataSource: responseJson,
+          page: page + 1,
         }, function () {
 
         });
-
       })
       .catch((error) => {
         //console.error(error);
@@ -33,14 +39,13 @@ export default class home extends React.Component {
           'Falha na conexão.',
           ToastAndroid.LONG,
           ToastAndroid.CENTER,
-      );
+        );
       });
   }
 
 
-
   render() {
-
+    const api = ip;
     if (this.state.isLoading) {
       return (
         <View style={[styles.container, styles.horizontal]}>
@@ -57,37 +62,43 @@ export default class home extends React.Component {
             <Card style={styles.card} >
               <CardItem style={styles.card} >
                 <Left>
-                  <Thumbnail source={{ uri: 'http://'+this.state.api+':3000/imgs/1583688845268-images.jpeg' }} />
+                  <Thumbnail source={{ uri: 'http://' + this.state.api + ':3000/imgs/1583688845268-images.jpeg' }} />
                   <Body>
-                    <Text style={{ fontWeight: 'bold',color:"#fff" }}>{item.nome}</Text>
-                    <Text style={{color:"#fff"}} note>{item.note}</Text>
+                    <Text style={{ fontWeight: 'bold', color: "#fff" }}>{item.nome}</Text>
+                    <Text style={{ color: "#fff" }} note>{item.note}</Text>
                   </Body>
                 </Left>
               </CardItem>
-              <CardItem style={{borderRadius: 15}} cardBody>
-                <Image source={{ uri: item.img_post }} style={{ height: 200, width: null, flex: 1,borderRadius: 15}} />
+              <CardItem style={{ borderRadius: 15 }} cardBody>
+                <Image source={{ uri: 'http://' + api + ':3000/posts/' + item.img_post }} style={{ height: 470, width: 300, flex: 1, borderRadius: 15 }} />
               </CardItem>
               <CardItem style={styles.card}>
                 <Left>
-                  
+
                   <Button onPress={() => Alert.alert('Poste Curtido')} transparent>
-                  <Icon name="thumb-up" size={20} style={{ color: '#FFD700' }} />
-                    <Text style={{ marginLeft: 4,color:"#fff"}}>{item.qntLikes}</Text>
+                    <Icon name="thumb-up" size={20} style={{ color: '#FFD700' }} />
+                    <Text style={{ marginLeft: 4, color: "#fff" }}>{item.qntLikes}</Text>
                   </Button>
                 </Left>
                 <Body>
-                  <Button transparent>
-                  <Icon active name='question-answer' size={20} style={{ color: '#FFD700' }} />
-                    <Text style={{ marginRight: 50,color:"#fff" }}>{item.qntComent}</Text>
+                  <Button transparent onPress={() => this.props.navigation.navigate('comentario', {
+                                itemId: item.id_post,
+                            })
+                        }>
+                    <Icon active name='question-answer' size={20} style={{ color: '#FFD700' }} />
+                    <Text style={{ marginRight: 50, color: "#fff" }}>{item.qntComent}</Text>
                   </Button>
                 </Body>
                 <Right>
-                  <Text style={{ color:"#fff" }}>{item.data_post}</Text>
+                  <Text style={{ color: "#fff" }}>{item.data_post}</Text>
                 </Right>
               </CardItem>
             </Card>
           }
           keyExtractor={item => item.id_post.toString()}
+          onEndReached={this.loadRepositories}
+          ListFooterComponent={this.renderFooter}
+          onEndReachedThreshold={0.1}
         />
       </View>
     );
@@ -105,10 +116,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     padding: 10
   },
-  card:{
+  card: {
     borderRadius: 20,
-    backgroundColor:"#303030",
-    borderColor:"#303030"
+    backgroundColor: "#303030",
+    borderColor: "#303030"
   }
 
 })
