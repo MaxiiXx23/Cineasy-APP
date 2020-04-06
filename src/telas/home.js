@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { FlatList, Image, ActivityIndicator, Text, View, Alert, StyleSheet, ToastAndroid } from 'react-native';
-import { Container, Header, Content, Card, CardItem, Thumbnail, Button, Left, Body, Right } from 'native-base';
+import { FlatList, Image, ActivityIndicator, Text, View, Alert, TouchableHighlight, StyleSheet, ToastAndroid } from 'react-native';
+import { Container, Header, Content, Card, CardItem, Button, Thumbnail, Left, Body, Right } from 'native-base';
 import ip from '../components/ip';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 export default class Home extends React.Component {
@@ -11,7 +11,7 @@ export default class Home extends React.Component {
     this.state = {
       isLoading: true,
       api: ip,
-      page: 2
+      page: 2,
     }
   }
 
@@ -30,7 +30,6 @@ export default class Home extends React.Component {
           dataSource: responseJson,
           page: page + 1,
         }, function () {
-
         });
       })
       .catch((error) => {
@@ -42,7 +41,28 @@ export default class Home extends React.Component {
         );
       });
   }
-
+  _curtir = async () => {
+    const api = ip;
+    const like = this.state.like
+    const idPost = this.state.id
+    fetch(`http://${api}:3000/posts/like/`, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        like: like,
+        id_post: idPost,
+      }),
+    });
+    ToastAndroid.showWithGravity(
+      'Post curtido',
+      ToastAndroid.LONG,
+      ToastAndroid.CENTER,
+    );
+    this.loadRepositories();
+  }
 
   render() {
     const api = ip;
@@ -75,18 +95,27 @@ export default class Home extends React.Component {
               <CardItem style={styles.card}>
                 <Left>
 
-                  <Button onPress={() => Alert.alert('Poste Curtido')} transparent>
-                    <Icon name="thumb-up" size={20} style={{ color: '#FFD700' }} />
-                    <Text style={{ marginLeft: 4, color: "#fff" }}>{item.qntLikes}</Text>
-                  </Button>
+                  <TouchableHighlight onPress={() => this.setState({
+                    like: item.qntLikes,
+                    id: item.id_post
+                  })}
+                    style={styles.btnLike}
+                    underlayColor='black'
+                  >
+                    <View style={styles.btnContainer}>
+                      <Icon name="thumb-up" size={20} style={styles.btnIcon} onPress={this._curtir} />
+                      <Text style={{ marginTop: 4, color: "#fff" }}>{item.qntLikes}</Text>
+                    </View>
+                  </TouchableHighlight>
                 </Left>
                 <Body>
                   <Button transparent onPress={() => this.props.navigation.navigate('comentario', {
-                                itemId: item.id_post,
-                            })
-                        }>
-                    <Icon active name='question-answer' size={20} style={{ color: '#FFD700' }} />
-                    <Text style={{ marginRight: 50, color: "#fff" }}>{item.qntComent}</Text>
+                    itemId: item.id_post,
+                    qntComent: item.qntComent
+                  })
+                  }>
+                    <Icon active name='question-answer' size={20} style={styles.btnIcon2} />
+                    <Text style={{ marginRight: 45,marginTop: -5, color: "#fff" }}>{item.qntComent}</Text>
                   </Button>
                 </Body>
                 <Right>
@@ -120,6 +149,28 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: "#303030",
     borderColor: "#303030"
-  }
+  },
+  btnLike: {
+    height: 40,
+    width: 60
+  },
+  btnContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'stretch',
+    alignSelf: 'stretch',
+    borderRadius: 2,
+  },
+  btnIcon: {
+    height: 50,
+    width: 35,
+    marginTop:5
+  },
+  btnIcon2:{
+    height: 50,
+    width: 35,
+    marginTop:23
 
+  }
 })

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Button, FlatList, ToastAndroid, TextInput, TouchableHighlight, AsyncStorage, StyleSheet,Image } from 'react-native';
+import { View, Text, Button, FlatList, ToastAndroid, TextInput, TouchableHighlight, AsyncStorage, StyleSheet, Image } from 'react-native';
 import { Container, Header, Content, Thumbnail } from 'native-base';
 import ip from './ip';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -56,6 +56,8 @@ export default class Comentario extends Component {
         const api = ip;
         const { navigation } = this.props;
         const idPost = navigation.getParam('itemId', 'NO-ID');
+        const qntComentarios = navigation.getParam('qntComent', 'NO-ID');
+        //console.log(qntComentarios)
         const id = await AsyncStorage.getItem('idUsuario');
         if (this.state.TextInputComentar == "") {
             ToastAndroid.showWithGravity(
@@ -76,6 +78,17 @@ export default class Comentario extends Component {
                     comentario: this.state.TextInputComentar
                 }),
             });
+            fetch(`http://${api}:3000/posts/qntcoment/`, {
+                method: 'PUT',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    qntcoment: qntComentarios,
+                    id_post: idPost,
+                }),
+            });
             ToastAndroid.showWithGravity(
                 'Comentario efetuado',
                 ToastAndroid.LONG,
@@ -85,6 +98,9 @@ export default class Comentario extends Component {
             this.setState({ TextInputComentar: '' })
         }
     }
+    //criar um condicional na flatlist para criar o component de deletar e update comentario
+    //criar um model(ou outra tela) para editar o comentario, passando o id do comentario
+    //https://reactnavigation.org/docs/4.x/modal para criar um model
     render() {
         const api = ip;
         return (
@@ -100,8 +116,8 @@ export default class Comentario extends Component {
                                     }}
                                 />
                             </View>
-                            <Text style={styles.nome} numberOfLines={15}>{item.nome}</Text>
-                            <Text style={styles.texto}>{item.comentario}</Text>
+                            <Text style={styles.nome} >{item.nome}</Text>
+                            <Text style={styles.texto} numberOfLines={15}>{item.comentario}</Text>
                         </View>
                     }
                     keyExtractor={item => item.id_comentario.toString()}
@@ -173,20 +189,20 @@ const styles = StyleSheet.create({
         height: 50,
         width: 35,
     },
-    thumbnail:{
+    thumbnail: {
         borderWidth: 1,
         borderRadius: 10,
-        height:40,
-        width:50,
+        height: 40,
+        width: 50,
     },
-    containerComentario:{
+    containerComentario: {
         flexDirection: 'row',
-        marginBottom:5
+        marginBottom: 5
     },
-    nome:{
-        fontWeight:'bold',
-        color:'white',
-        marginLeft:8,
-        marginTop:15
+    nome: {
+        fontWeight: 'bold',
+        color: 'white',
+        marginLeft: 8,
+        marginTop: 15
     }
 });
