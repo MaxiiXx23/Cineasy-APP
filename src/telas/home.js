@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { FlatList, Image, ActivityIndicator, Text, View, Alert, TouchableHighlight, StyleSheet, ToastAndroid } from 'react-native';
+import { FlatList, Image, ActivityIndicator, Text, View, Dimensions, TouchableHighlight, TouchableWithoutFeedback, StyleSheet, ToastAndroid } from 'react-native';
 import { Container, Header, Content, Card, CardItem, Button, Thumbnail, Left, Body, Right } from 'native-base';
 import ip from '../components/ip';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -41,6 +41,16 @@ export default class Home extends React.Component {
         );
       });
   }
+  lastTap = null;
+  _handleDoubleTap = async () => {
+    const now = Date.now();
+    const DOUBLE_PRESS_DELAY = 300;
+    if (this.lastTap && (now - this.lastTap) < DOUBLE_PRESS_DELAY) {
+      this._curtir();
+    } else {
+      this.lastTap = now;
+    }
+  }
   _curtir = async () => {
     const api = ip;
     const like = this.state.like
@@ -73,7 +83,7 @@ export default class Home extends React.Component {
         </View>
       )
     }
-
+    const w = Dimensions.get("window");
     return (
       <View style={{ flex: 1, paddingTop: 20, backgroundColor: '#191919' }}>
         <FlatList
@@ -90,20 +100,29 @@ export default class Home extends React.Component {
                 </Left>
               </CardItem>
               <CardItem style={{ borderRadius: 15 }} cardBody>
-                <Image source={{ uri: 'http://' + api + ':3000/posts/' + item.img_post }} style={{ height: 470, width: 300, flex: 1, borderRadius: 15 }} />
+                <TouchableWithoutFeedback onPress={() => {
+                    this.setState({
+                      like: item.qntLikes,
+                      id: item.id_post
+                    }); this._handleDoubleTap();
+                  }}>
+                  <Image source={{ uri: 'http://' + api + ':3000/posts/' + item.img_post }} style={{ width: w.width, height: w.width, flex: 1, borderRadius: 15 }} />
+                </TouchableWithoutFeedback>
               </CardItem>
               <CardItem style={styles.card}>
                 <Left>
 
-                  <TouchableHighlight onPress={() => this.setState({
-                    like: item.qntLikes,
-                    id: item.id_post
-                  })}
+                  <TouchableHighlight onPress={() => {
+                    this.setState({
+                      like: item.qntLikes,
+                      id: item.id_post
+                    }); this._handleDoubleTap();
+                  }}
                     style={styles.btnLike}
                     underlayColor='black'
                   >
                     <View style={styles.btnContainer}>
-                      <Icon name="thumb-up" size={20} style={styles.btnIcon} onPress={this._curtir} />
+                      <Icon name="thumb-up" size={20} style={styles.btnIcon} />
                       <Text style={{ marginTop: 4, color: "#fff" }}>{item.qntLikes}</Text>
                     </View>
                   </TouchableHighlight>
@@ -115,7 +134,7 @@ export default class Home extends React.Component {
                   })
                   }>
                     <Icon active name='question-answer' size={20} style={styles.btnIcon2} />
-                    <Text style={{ marginRight: 45,marginTop: -5, color: "#fff" }}>{item.qntComent}</Text>
+                    <Text style={{ marginRight: 45, marginTop: -5, color: "#fff" }}>{item.qntComent}</Text>
                   </Button>
                 </Body>
                 <Right>
@@ -165,12 +184,12 @@ const styles = StyleSheet.create({
   btnIcon: {
     height: 50,
     width: 35,
-    marginTop:5
+    marginTop: 5
   },
-  btnIcon2:{
+  btnIcon2: {
     height: 50,
     width: 35,
-    marginTop:23
+    marginTop: 23
 
   }
 })

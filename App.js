@@ -9,13 +9,13 @@ import filmes from './src/telas/filmes';
 import drawer from './src/drawer/drawer';
 import Cinemas from './src/telas/cinemas';
 import Detalhes from './src/categorias/detalhes'
-import NevegaHome from './src/components/navegaHome';
+import RootStack from './src/components/navegaHome';
 
 // rotas do aplicativo
 // colocar o ID do usuario no asyncStorage e usar nas rotas
 const Tabs = createBottomTabNavigator({
   Feed: {
-    screen: NevegaHome,
+    screen: RootStack,
     navigationOptions: {
       tabBarLabel: 'Feed',
     },

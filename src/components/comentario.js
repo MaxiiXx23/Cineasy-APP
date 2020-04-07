@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Button, FlatList, ToastAndroid, TextInput, TouchableHighlight, AsyncStorage, StyleSheet, Image } from 'react-native';
+import { View, Text, FlatList, ToastAndroid, TextInput, TouchableHighlight, TouchableWithoutFeedback, AsyncStorage, StyleSheet } from 'react-native';
 import { Container, Header, Content, Thumbnail } from 'native-base';
 import ip from './ip';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -51,6 +51,13 @@ export default class Comentario extends Component {
                     ToastAndroid.CENTER,
                 );
             });
+    }
+    _Options = async () => {
+        const idComentario = this.state.id;
+        console.log(idComentario)
+        this.props.navigation.navigate('Opcao', {
+            id: idComentario,
+        });
     }
     _comentar = async () => {
         const api = ip;
@@ -117,7 +124,15 @@ export default class Comentario extends Component {
                                 />
                             </View>
                             <Text style={styles.nome} >{item.nome}</Text>
-                            <Text style={styles.texto} numberOfLines={15}>{item.comentario}</Text>
+                            <TouchableWithoutFeedback delayLongPress={10} onLongPress={() => {
+                                this.setState({
+                                    id: item.id_comentario
+                                }); this._Options();
+                            }} >
+                                <Text style={styles.texto} numberOfLines={15}>
+                                    {item.comentario}
+                                </Text>
+                            </TouchableWithoutFeedback>
                         </View>
                     }
                     keyExtractor={item => item.id_comentario.toString()}
