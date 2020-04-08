@@ -54,7 +54,7 @@ export default class Comentario extends Component {
     }
     _Options = async () => {
         const idComentario = this.state.id;
-        console.log(idComentario)
+        //console.log(idComentario)
         this.props.navigation.navigate('Opcao', {
             id: idComentario,
         });

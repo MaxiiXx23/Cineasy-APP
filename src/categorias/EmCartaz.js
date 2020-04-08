@@ -32,8 +32,7 @@ class EmCartaz extends React.Component {
                 }, function () {
 
                 });
-            })
-            .catch((error) => {
+            }).catch((error) => {
                 //console.error(error);
                 ToastAndroid.showWithGravity(
                     'Falha na conexão.',

@@ -31,8 +31,7 @@ export default class Home extends React.Component {
           page: page + 1,
         }, function () {
         });
-      })
-      .catch((error) => {
+      }).catch((error) => {
         //console.error(error);
         ToastAndroid.showWithGravity(
           'Falha na conexão.',
@@ -65,6 +64,12 @@ export default class Home extends React.Component {
         like: like,
         id_post: idPost,
       }),
+    }).catch((error) =>{
+      ToastAndroid.showWithGravity(
+        'Falha ao curtir',
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER,
+      );
     });
     ToastAndroid.showWithGravity(
       'Post curtido',
