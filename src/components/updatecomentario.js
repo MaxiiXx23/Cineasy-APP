@@ -3,6 +3,16 @@ import { View, Text, Dimensions, TouchableHighlight, TextInput, StyleSheet, Toas
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ip from './ip';
 export default class Updatecomentario extends Component {
+    static navigationOptions = {
+        headerTintColor: 'white',
+        headerStyle: {
+            backgroundColor: 'black',
+        },
+        headerTitleStyle: {
+            color: 'white'
+        },
+
+    };
     constructor(props) {
         super(props);
         this.state = {
@@ -44,7 +54,7 @@ export default class Updatecomentario extends Component {
                 ToastAndroid.LONG,
                 ToastAndroid.CENTER,
             );
-            this.props.navigation.navigate('comentario');
+            this.props.navigation.navigate('comentários');
         }
     }
 
@@ -52,26 +62,28 @@ export default class Updatecomentario extends Component {
         const w = Dimensions.get("window");
         return (
             <View style={{ flex: 1, backgroundColor: "#191919" }}>
-                <TextInput style={styles.input} placeholder="Adicione um comentário..."
-                    placeholderTextColor="white"
-                    multiline={true}
-                    onChangeText={(TextInputComentar) => this.setState({ TextInputComentar })}
-                    value={this.state.TextInputComentar}
-                />
-                <View style={{ width: w.width, height: w.height, backgroundColor: "#191919", justifyContent: "center" }}>
-                    <TouchableHighlight
-                        onPress={this._comentarUpdate}
-                        style={styles.btnClickContain}
-                        underlayColor='black'>
-                        <View
-                            style={styles.btnContainer}>
-                            <Icon
-                                name='send'
-                                size={35}
-                                color='white'
-                            />
-                        </View>
-                    </TouchableHighlight>
+                <View style={{ width: w.width, height: (w.height) / 2, backgroundColor: "#191919", justifyContent: "center" }}>
+                    <View style={styles.form}>
+                        <TextInput style={styles.input} placeholder="Comentário..."
+                            placeholderTextColor="white"
+                            multiline={true}
+                            onChangeText={(TextInputComentar) => this.setState({ TextInputComentar })}
+                            value={this.state.TextInputComentar}
+                        />
+                        <TouchableHighlight
+                            onPress={this._comentarUpdate}
+                            style={styles.btnClickContain}
+                            underlayColor='black'>
+                            <View
+                                style={styles.btnContainer}>
+                                <Icon
+                                    name='send'
+                                    size={35}
+                                    color='white'
+                                />
+                            </View>
+                        </TouchableHighlight>
+                    </View>
                 </View>
             </View>
         );
@@ -85,10 +97,10 @@ const styles = StyleSheet.create({
         borderBottomColor: '#303030',
         borderRadius: 5,
         width: '88%',
-        marginTop: 15
+        marginTop: 0
     },
     btnClickContain: {
-        backgroundColor: 'black',
+        backgroundColor: '#191919',
         borderRadius: 5,
         padding: 5,
         marginTop: 5,
@@ -104,4 +116,11 @@ const styles = StyleSheet.create({
         alignSelf: 'stretch',
         borderRadius: 10,
     },
+    form:{
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'stretch',
+        alignSelf: 'stretch',
+
+    }
 });

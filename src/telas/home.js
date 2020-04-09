@@ -133,7 +133,7 @@ export default class Home extends React.Component {
                   </TouchableHighlight>
                 </Left>
                 <Body>
-                  <Button transparent onPress={() => this.props.navigation.navigate('comentario', {
+                  <Button transparent onPress={() => this.props.navigation.navigate('comentários', {
                     itemId: item.id_post,
                     qntComent: item.qntComent
                   })

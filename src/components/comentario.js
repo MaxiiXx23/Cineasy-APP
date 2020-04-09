@@ -24,7 +24,13 @@ export default class Comentario extends Component {
     }
     componentDidMount() {
         this.loadRepositories();
+        this.willBlurListener = this.props.navigation.addListener('willFocus', () => {
+            this.loadRepositories();
+          })
     }
+    componentWillUnmount() {
+        this.willBlurListener.remove();
+      }
     loadRepositories = async () => {
         const { page } = this.state;
         const { navigation } = this.props;
@@ -53,10 +59,15 @@ export default class Comentario extends Component {
             });
     }
     _Options = async () => {
+        const { navigation } = this.props;
+        const idPost = navigation.getParam('itemId', 'NO-ID');
+        const qntComentarios = navigation.getParam('qntComent', 'NO-ID');
         const idComentario = this.state.id;
         //console.log(idComentario)
         this.props.navigation.navigate('Opcao', {
             id: idComentario,
+            qntComentModal:qntComentarios,
+            idPostModal:idPost,
         });
     }
     _comentar = async () => {
@@ -124,7 +135,7 @@ export default class Comentario extends Component {
                                 />
                             </View>
                             <Text style={styles.nome} >{item.nome}</Text>
-                            <TouchableWithoutFeedback delayLongPress={10} onLongPress={() => {
+                            <TouchableWithoutFeedback delayLongPress={5} onLongPress={() => {
                                 this.setState({
                                     id: item.id_comentario
                                 }); this._Options();
