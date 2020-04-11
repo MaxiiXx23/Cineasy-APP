@@ -4,6 +4,7 @@ import { FlatList, Image, ActivityIndicator, Text, View, Dimensions, TouchableHi
 import { Container, Header, Content, Card, CardItem, Button, Thumbnail, Left, Body, Right } from 'native-base';
 import ip from '../components/ip';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Video from 'react-native-video';
 export default class Home extends React.Component {
 
   constructor(props) {
@@ -12,11 +13,20 @@ export default class Home extends React.Component {
       isLoading: true,
       api: ip,
       page: 2,
+      pause: true,
+      fullscreen:false
     }
   }
 
   componentDidMount() {
     this.loadRepositories();
+    //this._tipoArquivo();
+    this.willBlurListener = this.props.navigation.addListener('willFocus', () => {
+      this.loadRepositories();
+    })
+  }
+  componentWillUnmount() {
+    this.willBlurListener.remove();
   }
   loadRepositories = async () => {
     if (this.state.loading) return;
@@ -64,7 +74,7 @@ export default class Home extends React.Component {
         like: like,
         id_post: idPost,
       }),
-    }).catch((error) =>{
+    }).catch((error) => {
       ToastAndroid.showWithGravity(
         'Falha ao curtir',
         ToastAndroid.LONG,
@@ -78,7 +88,16 @@ export default class Home extends React.Component {
     );
     this.loadRepositories();
   }
-
+  _pause = async () => {
+    this.setState({
+      pause: false
+    })
+  }
+  _fullScrenn = async () => {
+    this.setState({
+      fullscreen: true
+    })
+  }
   render() {
     const api = ip;
     if (this.state.isLoading) {
@@ -93,60 +112,124 @@ export default class Home extends React.Component {
       <View style={{ flex: 1, paddingTop: 20, backgroundColor: '#191919' }}>
         <FlatList
           data={this.state.dataSource}
-          renderItem={({ item }) =>
-            <Card style={styles.card} >
-              <CardItem style={styles.card} >
-                <Left>
-                  <Thumbnail source={{ uri: 'http://' + this.state.api + ':3000/imgs/1583688845268-images.jpeg' }} />
-                  <Body>
-                    <Text style={{ fontWeight: 'bold', color: "#fff" }}>{item.nome}</Text>
-                    <Text style={{ color: "#fff" }} note>{item.note}</Text>
-                  </Body>
-                </Left>
-              </CardItem>
-              <CardItem style={{ borderRadius: 15 }} cardBody>
-                <TouchableWithoutFeedback onPress={() => {
+          renderItem={({ item }) => {
+            if (item.tipo_file == 'image/jpeg' || item.tipo_file == 'image/png' || item.tipo_file == 'image/gif') {
+              return <Card style={styles.card} >
+                <CardItem style={styles.card} >
+                  <Left>
+                    <Thumbnail source={{ uri: 'http://' + this.state.api + ':3000/imgs/1583688845268-images.jpeg' }} />
+                    <Body>
+                      <Text style={{ fontWeight: 'bold', color: "#fff" }}>{item.nome}</Text>
+                      <Text style={{ color: "#fff" }} note>{item.note}</Text>
+                    </Body>
+                  </Left>
+                </CardItem>
+                <CardItem style={{ borderRadius: 15 }} cardBody>
+                  <TouchableWithoutFeedback onPress={() => {
                     this.setState({
                       like: item.qntLikes,
                       id: item.id_post
                     }); this._handleDoubleTap();
                   }}>
-                  <Image source={{ uri: 'http://' + api + ':3000/posts/' + item.img_post }} style={{ width: w.width, height: w.width, flex: 1, borderRadius: 15 }} />
-                </TouchableWithoutFeedback>
-              </CardItem>
-              <CardItem style={styles.card}>
-                <Left>
+                    <Image source={{ uri: 'http://' + api + ':3000/posts/' + item.img_post }} style={{ width: w.width, height: w.width, flex: 1, borderRadius: 15 }} />
+                  </TouchableWithoutFeedback>
+                </CardItem>
+                <CardItem style={styles.card}>
+                  <Left>
 
-                  <TouchableHighlight onPress={() => {
-                    this.setState({
-                      like: item.qntLikes,
-                      id: item.id_post
-                    }); this._handleDoubleTap();
-                  }}
-                    style={styles.btnLike}
-                    underlayColor='black'
-                  >
-                    <View style={styles.btnContainer}>
-                      <Icon name="thumb-up" size={20} style={styles.btnIcon} />
-                      <Text style={{ marginTop: 4, color: "#fff" }}>{item.qntLikes}</Text>
-                    </View>
-                  </TouchableHighlight>
-                </Left>
-                <Body>
-                  <Button transparent onPress={() => this.props.navigation.navigate('comentários', {
-                    itemId: item.id_post,
-                    qntComent: item.qntComent
-                  })
-                  }>
-                    <Icon active name='question-answer' size={20} style={styles.btnIcon2} />
-                    <Text style={{ marginRight: 45, marginTop: -5, color: "#fff" }}>{item.qntComent}</Text>
-                  </Button>
-                </Body>
-                <Right>
-                  <Text style={{ color: "#fff" }}>{item.data_post}</Text>
-                </Right>
-              </CardItem>
-            </Card>
+                    <TouchableHighlight onPress={() => {
+                      this.setState({
+                        like: item.qntLikes,
+                        id: item.id_post
+                      }); this._handleDoubleTap();
+                    }}
+                      style={styles.btnLike}
+                      underlayColor='black'
+                    >
+                      <View style={styles.btnContainer}>
+                        <Icon name="thumb-up" size={20} style={styles.btnIcon} />
+                        <Text style={{ marginTop: 4, color: "#fff" }}>{item.qntLikes}</Text>
+                      </View>
+                    </TouchableHighlight>
+                  </Left>
+                  <Body>
+                    <Button transparent onPress={() => this.props.navigation.navigate('Comentários', {
+                      itemId: item.id_post,
+                      qntComent: item.qntComent
+                    })
+                    }>
+                      <Icon active name='question-answer' size={20} style={styles.btnIcon2} />
+                      <Text style={{ marginRight: 45, marginTop: -5, color: "#fff" }}>{item.qntComent}</Text>
+                    </Button>
+                  </Body>
+                  <Right>
+                    <Text style={{ color: "#fff" }}>{item.data_post}</Text>
+                  </Right>
+                </CardItem>
+              </Card>
+            } else {
+              return <Card style={styles.card} >
+                <CardItem style={styles.card} >
+                  <Left>
+                    <Thumbnail source={{ uri: 'http://' + this.state.api + ':3000/imgs/1583688845268-images.jpeg' }} />
+                    <Body>
+                      <Text style={{ fontWeight: 'bold', color: "#fff" }}>{item.nome}</Text>
+                      <Text style={{ color: "#fff" }} note>{item.note}</Text>
+                    </Body>
+                  </Left>
+                </CardItem>
+                <View style={{ borderRadius: 15, width: 410, height: 400, backgroundColor: '#303030' }}>
+                  <TouchableWithoutFeedback onPress={() => {
+                    this._pause();
+                    this._fullScrenn();
+                  }}>
+                    <Video source={{ uri: 'http://' + api + ':3000/posts/' + item.img_post }}
+                      ref={(ref) => {
+                        this.player = ref
+                      }}
+                      fullscreen={true}
+                      controls={true}
+                      paused={this.state.pause}
+                      onBuffer={this.onBuffer}
+                      onError={this.videoError}
+                      style={styles.backgroundVideo} />
+                  </TouchableWithoutFeedback>
+                </View>
+                <CardItem style={styles.card}>
+                  <Left>
+
+                    <TouchableHighlight onPress={() => {
+                      this.setState({
+                        like: item.qntLikes,
+                        id: item.id_post
+                      }); this._handleDoubleTap();
+                    }}
+                      style={styles.btnLike}
+                      underlayColor='black'
+                    >
+                      <View style={styles.btnContainer}>
+                        <Icon name="thumb-up" size={20} style={styles.btnIcon} />
+                        <Text style={{ marginTop: 4, color: "#fff" }}>{item.qntLikes}</Text>
+                      </View>
+                    </TouchableHighlight>
+                  </Left>
+                  <Body>
+                    <Button transparent onPress={() => this.props.navigation.navigate('Comentários', {
+                      itemId: item.id_post,
+                      qntComent: item.qntComent
+                    })
+                    }>
+                      <Icon active name='question-answer' size={20} style={styles.btnIcon2} />
+                      <Text style={{ marginRight: 45, marginTop: -5, color: "#fff" }}>{item.qntComent}</Text>
+                    </Button>
+                  </Body>
+                  <Right>
+                    <Text style={{ color: "#fff" }}>{item.data_post}</Text>
+                  </Right>
+                </CardItem>
+              </Card>
+            }
+          }
           }
           keyExtractor={item => item.id_post.toString()}
           onEndReached={this.loadRepositories}
@@ -189,12 +272,21 @@ const styles = StyleSheet.create({
   btnIcon: {
     height: 50,
     width: 35,
-    marginTop: 5
+    marginTop: 5,
+    color:'#FFD700'
   },
   btnIcon2: {
     height: 50,
     width: 35,
-    marginTop: 23
+    marginTop: 23,
+    color:'#FFD700'
 
-  }
+  },
+  backgroundVideo: {
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    flex:1
+  },
 })

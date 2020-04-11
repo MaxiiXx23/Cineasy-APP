@@ -7,7 +7,7 @@ export default class Comentario extends Component {
     static navigationOptions = {
         headerTintColor: 'white',
         headerStyle: {
-            backgroundColor: 'black',
+            backgroundColor: '#191919',
         },
         headerTitleStyle: {
             color: 'white'
@@ -117,8 +117,6 @@ export default class Comentario extends Component {
         }
     }
     //criar um condicional na flatlist para criar o component de deletar e update comentario
-    //criar um model(ou outra tela) para editar o comentario, passando o id do comentario
-    //https://reactnavigation.org/docs/4.x/modal para criar um model
     render() {
         const api = ip;
         return (
@@ -178,7 +176,7 @@ export default class Comentario extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#000000',
+        backgroundColor: '#191919',
     },
     texto: {
         color: 'white',
@@ -197,7 +195,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     btnClickContain: {
-        backgroundColor: 'black',
+        backgroundColor: '#191919',
         borderRadius: 5,
         padding: 5,
         marginTop: 5,

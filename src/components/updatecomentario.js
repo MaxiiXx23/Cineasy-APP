@@ -6,7 +6,7 @@ export default class Updatecomentario extends Component {
     static navigationOptions = {
         headerTintColor: 'white',
         headerStyle: {
-            backgroundColor: 'black',
+            backgroundColor: '#191919',
         },
         headerTitleStyle: {
             color: 'white'
@@ -54,7 +54,7 @@ export default class Updatecomentario extends Component {
                 ToastAndroid.LONG,
                 ToastAndroid.CENTER,
             );
-            this.props.navigation.navigate('comentários');
+            this.props.navigation.navigate('Comentários');
         }
     }
 
@@ -62,7 +62,7 @@ export default class Updatecomentario extends Component {
         const w = Dimensions.get("window");
         return (
             <View style={{ flex: 1, backgroundColor: "#191919" }}>
-                <View style={{ width: w.width, height: (w.height) / 2, backgroundColor: "#191919", justifyContent: "center" }}>
+                <View style={{ backgroundColor: "#191919", justifyContent: "center" }}>
                     <View style={styles.form}>
                         <TextInput style={styles.input} placeholder="Comentário..."
                             placeholderTextColor="white"
@@ -73,7 +73,7 @@ export default class Updatecomentario extends Component {
                         <TouchableHighlight
                             onPress={this._comentarUpdate}
                             style={styles.btnClickContain}
-                            underlayColor='black'>
+                            underlayColor='#191919'>
                             <View
                                 style={styles.btnContainer}>
                                 <Icon
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
         color: 'white',
         borderWidth: 1,
         borderBottomColor: '#303030',
-        borderRadius: 5,
+        borderRadius: 35,
         width: '88%',
         marginTop: 0
     },
@@ -121,6 +121,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'stretch',
         alignSelf: 'stretch',
+        marginBottom:0
 
     }
 });

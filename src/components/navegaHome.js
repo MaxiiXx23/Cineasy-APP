@@ -15,7 +15,7 @@ const NevegaHome = createStackNavigator({
             headerShown: false,
         },
     },
-    comentários: {
+    Comentários: {
         screen: Comentario,
     },
     Opcao: {
@@ -24,7 +24,7 @@ const NevegaHome = createStackNavigator({
             headerShown: false,
         },
     },
-    editar: {
+    Editar: {
         screen: Updatecomentario,
     },
 },

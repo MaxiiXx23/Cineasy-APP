@@ -75,14 +75,14 @@ export default class Modaloptions extends Component {
             ToastAndroid.LONG,
             ToastAndroid.CENTER,
         );
-        this.props.navigation.navigate('comentários');
+        this.props.navigation.navigate('Comentários');
         //this.props.navigation.goBack()
     }
     _
     _navegaUpdate = async () => {
         const { navigation } = this.props;
         const idcomentario = navigation.getParam('id', 'NO-ID');
-        this.props.navigation.navigate('editar', {
+        this.props.navigation.navigate('Editar', {
             id: idcomentario,
         });
     }
@@ -106,7 +106,7 @@ export default class Modaloptions extends Component {
                     </TouchableHighlight>
                     <TouchableHighlight
                         onPress={this._navegaUpdate} style={styles.btnClickContain2}
-                        underlayColor='#042417'>
+                        underlayColor='#EEC900'>
                         <View
                             style={styles.btnContainer}>
                             <Icon
@@ -124,32 +124,32 @@ export default class Modaloptions extends Component {
 }
 const styles = StyleSheet.create({
     btnClickContain: {
-        width:'55%',
+        width:'68%',
         height: '25%',
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'stretch',
         alignSelf: 'stretch',
         backgroundColor: '#FF0000',
-        borderRadius: 5,
+        borderRadius: 23,
         padding: 10,
         marginTop: 5,
         marginBottom: 20,
-        marginLeft:'22%'
+        marginLeft:'18%'
       },
       btnClickContain2: {
-        width:'55%',
+        width:'68%',
         height: '25%',
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'stretch',
         alignSelf: 'stretch',
         backgroundColor: '#EEC900',
-        borderRadius: 5,
+        borderRadius: 23,
         padding: 10,
         marginTop: 5,
         marginBottom: 5,
-        marginLeft:'22%'
+        marginLeft:'18%'
       },
       btnContainer: {
         flex: 1,
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'stretch',
         alignSelf: 'stretch',
-        borderRadius: 10,
+        borderRadius: 15,
       },
       btnIcon: {
         height: 25,
