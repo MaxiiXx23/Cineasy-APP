@@ -1,36 +1,95 @@
 import React, { Component } from 'react';
-import { View, Text, ImageBackground, Button, StatusBar, CheckBox, TouchableOpacity, KeyboardAvoidingView, Image, TextInput, StyleSheet, Picker } from 'react-native';
+import { View, Text, ImageBackground, ToastAndroid, StatusBar, TouchableOpacity, KeyboardAvoidingView, TextInput, StyleSheet, Alert } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
-
+import ip from '../components/ip';
 export default class cadastro extends Component {
   constructor(props) {
     super(props);
     this.state = {
       TextInputSenha2: '',
-      TextInputUserName: '',
       TextInputNome: '',
       nome: '',
-      language: '',
       text: '',
-      cpf: '',
       international: '',
       value: '',
       checked: false,
       TextInputEmail: '',
       TextInputSenha: '',
-      dados: {
-        Logradouro: '',
-        bairro: '',
-        localidade: '',
-        uf: ''
-      },
-      cep: ''
     };
-    Cep = () => {
-      console.log('olá mundo');
+  }
+  _test = async () => {
+    if (this.state.TextInputEmail == "" && this.state.TextInputSenha == "") {
+      ToastAndroid.showWithGravity(
+        'Campos Vazios, por favor preencha-os.',
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER,
+      );
     }
-    InsertDados = () => {
-      fetch('http://192.168.11.4:3000/cadastro', {
+  }
+  _InsertDados = async () => {
+    const nome = this.state.TextInputNome
+    const email = this.state.TextInputEmail
+    const senha = this.state.TextInputSenha
+    const senha2 = this.state.TextInputSenha2
+    const phone = this.state.international
+    const QntdNum = phone.length
+    const QntdSenha = senha.length
+    //console.log(QntdNum)
+    if (nome == "" && email == "" && senha == "" && senha2 == "" && phone == "") {
+      ToastAndroid.showWithGravity(
+        'Campos Vazios, por favor preencha-os.',
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER,
+      );
+    } else if (nome == "") {
+      ToastAndroid.showWithGravity(
+        'Campo Nome vazio, por favor preencha-o.',
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER,
+      );
+    } else if (phone == "") {
+      ToastAndroid.showWithGravity(
+        'Campo Telefone vazio, por favor preencha-o.',
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER,
+      );
+    } else if (QntdNum < 14) {
+      ToastAndroid.showWithGravity(
+        'Número de telefone inválido',
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER,
+      );
+    } else if (email == "") {
+      ToastAndroid.showWithGravity(
+        'Campo Email vazio, por favor preencha-o.',
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER,
+      );
+    } else if (senha == "") {
+      ToastAndroid.showWithGravity(
+        'Campo Senha vazio, por favor preencha-o.',
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER,
+      );
+    } else if (senha2 == "") {
+      ToastAndroid.showWithGravity(
+        'Campo Confirmar senha vazio, por favor preencha-o.',
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER,
+      );
+    } else {
+      const explode1 = phone.split('(')
+      const phone2 = explode1[1]
+      const explode2 = phone2.split(')')
+      const dd = explode2[0]
+      const phone3 = explode2[1]
+      const explode3 = phone3.split('-');
+      const firstPart = explode3[1].split(' ');
+      const secondPart = explode3[1]
+      const PhoneValidado = 55 + dd + firstPart + secondPart
+      //console.log(PhoneValidado)
+      const api = ip
+      fetch(`http://${api}:3000/usuarios/`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -38,15 +97,21 @@ export default class cadastro extends Component {
         },
         body: JSON.stringify({
           email: this.state.TextInputEmail,
-          senha: this.state.TextInputSenha,
+          nome: this.state.TextInputNome,
+          telefone: PhoneValidado,
+          senha: this.state.TextInputSenha
         }),
-      });
+      }).then((response) => response.json()).then((responseJon) => {
+        console.log(responseJon.ErrValidator[0].MsgError)
+        //criar uma válidação com o erro trasido da api e se tudo tiver certo navegar o usuário para o app
+      })
+        .catch((error) => {
+          console.log(error)
+        });
 
     }
   }
-
   render() {
-    const { checked } = this.state;
     return (
       <>
         <StatusBar backgroundColor="black" barStyle="dark-content" />
@@ -60,16 +125,13 @@ export default class cadastro extends Component {
                 placeholder="Nome:"
                 onChangeText={TextInputNome => this.setState({ TextInputNome })}
               />
-              <TextInput style={styles.Inputs}
-                placeholder="UserName:"
-                onChangeText={TextInputUserName => this.setState({ TextInputUserName })}
-              />
               <TextInputMask style={styles.Inputs}
                 type={'cel-phone'}
                 options={{
                   maskType: 'BRL',
                   withDDD: true,
-                  dddMask: '(99) '
+                  dddMask: '(11)',
+                  mask: '9999999-9999'
                 }}
                 value={this.state.international}
                 placeholder="Telefone"
@@ -91,7 +153,7 @@ export default class cadastro extends Component {
                 placeholder="Confirmar senha:"
                 onChangeText={TextInputSenha2 => this.setState({ TextInputSenha2 })}
               />
-              <TouchableOpacity style={styles.BtnLogar} onPress={this.InsertDataToServer}>
+              <TouchableOpacity style={styles.BtnLogar} onPress={this._InsertDados}>
                 <Text style={styles.SubmitText}>
                   Cadastrar
                 </Text>
@@ -118,7 +180,7 @@ const styles = StyleSheet.create({
     marginTop: '6.5%'
   },
   ContainerImg: {
-    height:'43.5%'
+    height: '43.5%'
   },
   ContainerInputs: {
     flex: 1,

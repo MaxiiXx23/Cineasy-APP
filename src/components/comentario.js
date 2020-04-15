@@ -63,12 +63,16 @@ export default class Comentario extends Component {
         const idPost = navigation.getParam('itemId', 'NO-ID');
         const qntComentarios = navigation.getParam('qntComent', 'NO-ID');
         const idComentario = this.state.id;
-        //console.log(idComentario)
-        this.props.navigation.navigate('Opcao', {
-            id: idComentario,
-            qntComentModal:qntComentarios,
-            idPostModal:idPost,
-        });
+        const idLogado = await AsyncStorage.getItem('idUsuario');
+        const idUser = this.state.iduser;
+        //console.log(idUser)
+        if(idLogado == idUser){
+            this.props.navigation.navigate('Opcao', {
+                id: idComentario,
+                qntComentModal:qntComentarios,
+                idPostModal:idPost,
+            });
+        }
     }
     _comentar = async () => {
         const api = ip;
@@ -135,7 +139,8 @@ export default class Comentario extends Component {
                             <Text style={styles.nome} >{item.nome}</Text>
                             <TouchableWithoutFeedback delayLongPress={5} onLongPress={() => {
                                 this.setState({
-                                    id: item.id_comentario
+                                    id: item.id_comentario,
+                                    iduser:item.id_user
                                 }); this._Options();
                             }} >
                                 <Text style={styles.texto} numberOfLines={15}>

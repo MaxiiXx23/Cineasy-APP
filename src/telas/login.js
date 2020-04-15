@@ -24,19 +24,19 @@ export default class login extends React.Component {
   InsertDataToServer = async () => {
     if (this.state.TextInputEmail == "" && this.state.TextInputSenha == "") {
       ToastAndroid.showWithGravity(
-        'Campos Vazios, por favor reencha-os.',
+        'Campos Vazios, por favor preencha-os.',
         ToastAndroid.LONG,
         ToastAndroid.CENTER,
       );
     } else if (this.state.TextInputSenha == "") {
       ToastAndroid.showWithGravity(
-        'Campo Senha vazio, por favor reencha-o.',
+        'Campo Senha vazio, por favor preencha-o.',
         ToastAndroid.LONG,
         ToastAndroid.CENTER,
       );
     } else if (this.state.TextInputEmail == "") {
       ToastAndroid.showWithGravity(
-        'Campo Email vazio, por favor reencha-o.',
+        'Campo Email vazio, por favor preencha-o.',
         ToastAndroid.LONG,
         ToastAndroid.CENTER,
       );
