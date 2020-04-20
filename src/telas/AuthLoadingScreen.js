@@ -23,12 +23,9 @@ export default class AuthLoadingScreen extends Component {
       const userToken = response[0][1]
       this.props.navigation.navigate(userToken ? 'App' : 'Auth');
     })
-    // This will switch to the App screen or Auth screen and this loading
-    // screen will be unmounted and thrown away.
-    //this.props.navigation.navigate(userToken ? 'App' : 'Auth');
+
   };
 
-  // Render any loading content that you like here
   render() {
     return (
       <View style={{ backgroundColor: "#000000", justifyContent: 'center', flex: 1 }}>

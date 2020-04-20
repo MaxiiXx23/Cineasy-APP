@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ImageBackground, ToastAndroid, StatusBar, TouchableOpacity, KeyboardAvoidingView, TextInput, StyleSheet, Alert } from 'react-native';
+import { View, Text, ImageBackground, ToastAndroid, StatusBar, TouchableOpacity, KeyboardAvoidingView, TextInput, StyleSheet, AsyncStorage } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import ip from '../components/ip';
 export default class cadastro extends Component {
@@ -25,6 +25,27 @@ export default class cadastro extends Component {
         ToastAndroid.CENTER,
       );
     }
+  }
+  _login = async () => {
+    const api = ip;
+    fetch('http://' + api + ':3000/usuarios/login', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: this.state.TextInputEmail,
+        senha: this.state.TextInputSenha
+      }),
+    }).then((response) => response.json())
+      .then((responseJson) => {
+        let result = responseJson.token;
+        this.setState({ Token: result });
+        this.setState({ idUsuario: responseJson.id })
+        AsyncStorage.multiSet([['userToken', JSON.stringify(responseJson.token)], ['idUsuario', JSON.stringify(responseJson.id)]]);
+      })
+    this.props.navigation.navigate('App');
   }
   _InsertDados = async () => {
     const nome = this.state.TextInputNome
@@ -84,10 +105,9 @@ export default class cadastro extends Component {
       const dd = explode2[0]
       const phone3 = explode2[1]
       const explode3 = phone3.split('-');
-      const firstPart = explode3[1].split(' ');
+      const firstPart = explode3[0].split(' ');
       const secondPart = explode3[1]
       const PhoneValidado = 55 + dd + firstPart + secondPart
-      //console.log(PhoneValidado)
       const api = ip
       fetch(`http://${api}:3000/usuarios/`, {
         method: 'POST',
@@ -102,11 +122,35 @@ export default class cadastro extends Component {
           senha: this.state.TextInputSenha
         }),
       }).then((response) => response.json()).then((responseJon) => {
-        console.log(responseJon.ErrValidator[0].MsgError)
-        //criar uma válidação com o erro trasido da api e se tudo tiver certo navegar o usuário para o app
+        if (responseJon.mensagem == "error validator") {
+          const error = responseJon.ErrValidator[0].MsgError
+          console.log(responseJon)
+          if (error == "Email inválido") {
+            ToastAndroid.showWithGravity(
+              'Email inválido, por favor corrija e tente novamente.',
+              ToastAndroid.LONG,
+              ToastAndroid.CENTER,
+            );
+          } else if (error == "Número inválido") {
+            ToastAndroid.showWithGravity(
+              'Formato telefone inválido, por favor corrija e tente novamente.',
+              ToastAndroid.LONG,
+              ToastAndroid.CENTER,
+            );
+          } else {
+            ToastAndroid.showWithGravity(
+              'Senha muito pequena. Ela deve ter entre  8 à 14 caracteres.',
+              ToastAndroid.LONG,
+              ToastAndroid.CENTER,
+            );
+          }
+        } else {
+          this._login()
+        }
       })
         .catch((error) => {
           console.log(error)
+
         });
 
     }
@@ -131,7 +175,6 @@ export default class cadastro extends Component {
                   maskType: 'BRL',
                   withDDD: true,
                   dddMask: '(11)',
-                  mask: '9999999-9999'
                 }}
                 value={this.state.international}
                 placeholder="Telefone"

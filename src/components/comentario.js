@@ -26,11 +26,11 @@ export default class Comentario extends Component {
         this.loadRepositories();
         this.willBlurListener = this.props.navigation.addListener('willFocus', () => {
             this.loadRepositories();
-          })
+        })
     }
     componentWillUnmount() {
         this.willBlurListener.remove();
-      }
+    }
     loadRepositories = async () => {
         const { page } = this.state;
         const { navigation } = this.props;
@@ -66,11 +66,11 @@ export default class Comentario extends Component {
         const idLogado = await AsyncStorage.getItem('idUsuario');
         const idUser = this.state.iduser;
         //console.log(idUser)
-        if(idLogado == idUser){
+        if (idLogado == idUser) {
             this.props.navigation.navigate('Opcao', {
                 id: idComentario,
-                qntComentModal:qntComentarios,
-                idPostModal:idPost,
+                qntComentModal: qntComentarios,
+                idPostModal: idPost,
             });
         }
     }
@@ -127,12 +127,13 @@ export default class Comentario extends Component {
             <View style={styles.container}>
                 <FlatList
                     data={this.state.dataSource}
-                    renderItem={({ item }) =>
-                        <View style={styles.containerComentario}>
+                    renderItem={({ item }) => {
+                        if (item.fotouser == null) {
+                            return <View style={styles.containerComentario}>
                             <View>
                                 <Thumbnail
                                     source={{
-                                        uri: 'http://' + api + ':3000/fotoperfil/maxPuch.jpg'
+                                        uri: 'http://' + api + ':3000/fotoperfil/avatarperfil.png'
                                     }}
                                 />
                             </View>
@@ -140,7 +141,7 @@ export default class Comentario extends Component {
                             <TouchableWithoutFeedback delayLongPress={5} onLongPress={() => {
                                 this.setState({
                                     id: item.id_comentario,
-                                    iduser:item.id_user
+                                    iduser: item.id_user
                                 }); this._Options();
                             }} >
                                 <Text style={styles.texto} numberOfLines={15}>
@@ -148,6 +149,30 @@ export default class Comentario extends Component {
                                 </Text>
                             </TouchableWithoutFeedback>
                         </View>
+                        }else{
+                            return <View style={styles.containerComentario}>
+                            <View>
+                                <Thumbnail
+                                    source={{
+                                        uri: 'http://' + api + ':3000/fotoperfil/'+item.fotouser
+                                    }}
+                                />
+                            </View>
+                            <Text style={styles.nome} >{item.nome}</Text>
+                            <TouchableWithoutFeedback delayLongPress={5} onLongPress={() => {
+                                this.setState({
+                                    id: item.id_comentario,
+                                    iduser: item.id_user
+                                }); this._Options();
+                            }} >
+                                <Text style={styles.texto} numberOfLines={15}>
+                                    {item.comentario}
+                                </Text>
+                            </TouchableWithoutFeedback>
+                        </View>
+                        }
+                    }
+
                     }
                     keyExtractor={item => item.id_comentario.toString()}
                     onEndReached={this.loadRepositories}
