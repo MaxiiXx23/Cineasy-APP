@@ -133,7 +133,7 @@ export default class Comentario extends Component {
                             <View>
                                 <Thumbnail
                                     source={{
-                                        uri: 'http://' + api + ':3000/fotoperfil/avatarperfil.png'
+                                        uri: 'http://' + api + ':3000/imgs/avatarperfil.png'
                                     }}
                                 />
                             </View>

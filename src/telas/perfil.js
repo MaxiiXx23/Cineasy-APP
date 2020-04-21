@@ -15,14 +15,22 @@ export default class Perfil extends Component {
       text: '',
       fotoUser: '',
       frase: '',
-      capaUser:''
+      capaUser: ''
     }
   }
-   async componentDidMount() {
+  async componentDidMount() {
+    this.willBlurListener = this.props.navigation.addListener('willFocus', () => {
+      this.loadRepositories();
+    })
+  }
+  componentWillUnmount() {
+    this.willBlurListener.remove();
+}
+  loadRepositories = async () => {
     const id = await AsyncStorage.getItem('idUsuario');
     //console.log(id)
     const api = ip;
-    return fetch('http://' + api + ':3000/usuarios/dados/'+id)
+    return fetch('http://' + api + ':3000/usuarios/dados/' + id)
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
@@ -56,9 +64,9 @@ export default class Perfil extends Component {
       <>
         <Container style={{ backgroundColor: '#191919' }}>
           <View>
-            <ImageBackground source={{ uri: this.state.capaUser }} style={[perfil2.capa]}>
+            <ImageBackground source={{ uri: 'http://' + api + ':3000/fotoperfil/' + this.state.capaUser }} style={[perfil2.capa]}>
             </ImageBackground>
-            <Thumbnail source={{ uri: 'http://' + api + ':3000/imgs/' + this.state.fotoUser }} style={[perfil2.foto]} />
+            <Thumbnail source={{ uri: 'http://' + api + ':3000/fotoperfil/' + this.state.fotoUser }} style={[perfil2.foto]} />
             <View>
               <Text style={[perfil2.info]}>
                 {this.state.text}

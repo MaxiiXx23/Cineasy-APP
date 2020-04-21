@@ -16,11 +16,51 @@ export default class login extends React.Component {
     };
 
   }
-  // login 
+  // tela de cadastro 
   _signInAsync = async () => {
     this.props.navigation.navigate('SignUp');
   };
-  //inserir dados
+  // Redefinir senha
+  _recupera = async () => {
+    if (this.state.TextInputEmail == "") {
+      ToastAndroid.showWithGravity(
+        'Coloque seu email no Campo de email, para poder solicitar uma redefinição de senha',
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER,
+      );
+    } else {
+      const api = ip;
+      const email = this.state.TextInputEmail
+      fetch(`http://${api}:3000/usuarios/updatepass`, {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: this.state.TextInputEmail,
+        }),
+      }).then((response) => response.json())
+        .then((responseJson) => {
+          console.log(responseJson)
+
+        })
+        .catch((error) => {
+          ToastAndroid.showWithGravity(
+            'Falha ao solicitar redefinição.',
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER,
+          );
+        });
+        ToastAndroid.showWithGravity(
+          'Nova senha enviada para o email: '+email,
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+        );
+    }
+
+  }
+  //login
   InsertDataToServer = async () => {
     if (this.state.TextInputEmail == "" && this.state.TextInputSenha == "") {
       ToastAndroid.showWithGravity(
@@ -91,24 +131,28 @@ export default class login extends React.Component {
             <View style={
               styles.ContainerInputs}>
               <View style={styles.searchSection}>
-                <Icon  name="person" size={30} color="#000"/>
+                <Icon name="person" size={30} color="#FFD700" />
                 <TextInput style={styles.Inputs} keyboardType='email-address'
                   placeholder="E-mail:"
                   onChangeText={TextInputEmail => this.setState({ TextInputEmail })}
                 />
               </View>
-              <TextInput style={styles.Inputs} secureTextEntry={true}
-                placeholder="Senha:"
-                onChangeText={TextInputSenha => this.setState({ TextInputSenha })}
-              />
-              <Text style={styles.Esqueceu}>Esqueceu sua senha?</Text>
+              <View style={
+                styles.searchSection}>
+                <Icon name="lock" size={30} color="#FFD700" />
+                <TextInput style={styles.Inputs} secureTextEntry={true}
+                  placeholder="Senha:"
+                  onChangeText={TextInputSenha => this.setState({ TextInputSenha })}
+                />
+              </View>
+              <Text style={styles.Esqueceu} onPress={this._recupera}>Esqueceu sua senha?</Text>
               <TouchableOpacity style={styles.BtnLogar} onPress={this.InsertDataToServer}>
                 <Text style={styles.SubmitText}>
                   Entrar
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.BtnCadastrar} onPress={this._signInAsync} >
-                <Text style={styles.SubmitText} >
+                <Text style={styles.SubmitText2} >
                   Cadastrar-se
                 </Text>
               </TouchableOpacity>
@@ -174,6 +218,10 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 18
   },
+  SubmitText2: {
+    color: '#FFD700',
+    fontSize: 18
+  },
   BtnCadastrar: {
     marginTop: 10,
     width: '90%',
@@ -183,13 +231,14 @@ const styles = StyleSheet.create({
 
   },
   Esqueceu: {
-    color: 'black',
-    marginBottom: 3,
+    color: '#FFD700',
+    marginBottom: 7,
     marginLeft: '45%'
+
   },
   searchSection: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-}
+  }
 });

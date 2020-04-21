@@ -17,11 +17,15 @@ export default class EditarPerfil extends React.Component {
       value: '',
       international: '',
       text: '',
-      uriCelular:'https://i1.wp.com/animasso.com.br/wp-content/uploads/2018/05/saitama-ok-aficionados-0.jpg?resize=600%2C384'
+      uriCelular: 'https://i1.wp.com/animasso.com.br/wp-content/uploads/2018/05/saitama-ok-aficionados-0.jpg?resize=600%2C384'
     };
   }
   // component para puxar os dados ao entrar na tela
   async componentDidMount() {
+    this._loadDados();
+  }
+  //loadDados 
+  _loadDados = async () => {
     const id = await AsyncStorage.getItem('idUsuario');
     //console.log(id)
     const api = ip;
@@ -48,8 +52,8 @@ export default class EditarPerfil extends React.Component {
         );
       });
   }
-  // função para chamar a tirar foto ou selecionar imagem do celular
-  _EscolheImg = () => {
+  //função que escolhe a foto de capa
+  _Escolhecapa = async () => {
     var options = {
       title: 'Selecione uma imagem',
       customButtons: [
@@ -64,53 +68,127 @@ export default class EditarPerfil extends React.Component {
       },
     };
     ImagePicker.showImagePicker(options, response => {
-      //console.log('Response = ', response);
+
 
       if (response.didCancel) {
-        //console.log('User cancelled image picker');
+
       } else if (response.error) {
-        //console.log('ImagePicker Error: ', response.error);
+
       } else if (response.customButton) {
-        //console.log('User tapped custom button: ', response.customButton);
-        //alert(response.customButton);
+
       } else {
         let source = response;
-        //console.log(source)
-        // You can also display the image using data:
-        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
         this.setState({
           filePath: source,
           uriCelular: source.uri
         });
-        console.log(this.state.filePath)
+        this._uploadCapa();
+        //console.log(this.state.filePath)
       }
     });
+
   };
-  //função para upload de imagem
-  _uploadImg = async () => {
+  _uploadCapa = async () => {
+    const id = await AsyncStorage.getItem('idUsuario');
     const api = ip
-    dadosImg = this.state.filePath
-    //console.log(dadosImg)
+    const dadosImg = this.state.filePath
     const data = new FormData();
-    data.append('name', 'avatar');
-    data.append('fileData', {
+    data.append('fileCapa', {
       uri: dadosImg.uri,
       type: dadosImg.type,
-      name: dadosImg.fileName
+      name: dadosImg.fileName,
     });
     const config = {
-      method: 'POST',
+      method: 'PUT',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'multipart/form-data',
       },
       body: data,
+
     };
-    fetch('http://' + api + ':3000/posts/upload', config)
+    fetch('http://' + api + ':3000/usuarios/uploadcapa/' + id, config)
       .then((response) => response.json())
       .then((responseJson) => {
         //console.log(responseJson);
         if (responseJson.mensagem == 'Ok') {
+          this._loadDados();
+          ToastAndroid.showWithGravity(
+            'Uplaod efetuado com sucesso',
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER,
+          );
+        } else {
+          ToastAndroid.showWithGravity(
+            'Uplaod nao efetuado',
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER,
+          );
+        }
+      })
+  }
+  // função para chamar a tirar foto ou selecionar imagem do celular
+  _EscolheImg = async () => {
+    var options = {
+      title: 'Selecione uma imagem',
+      customButtons: [
+      ],
+      takePhotoButtonTitle: 'Tirar um foto pela Câmera',
+      chooseFromLibraryButtonTitle: 'Selecionar uma foto da galeria',
+      cancelButtonTitle: 'Cancelar',
+
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.showImagePicker(options, response => {
+
+
+      if (response.didCancel) {
+
+      } else if (response.error) {
+
+      } else if (response.customButton) {
+
+      } else {
+        let source = response;
+        this.setState({
+          filePath: source,
+          uriCelular: source.uri
+        });
+        this._uploadImg();
+        //console.log(this.state.filePath)
+      }
+    });
+
+  };
+  //função para upload de imagem
+  _uploadImg = async () => {
+    const id = await AsyncStorage.getItem('idUsuario');
+    const api = ip
+    const dadosImg = this.state.filePath
+    const data = new FormData();
+    data.append('fileData', {
+      uri: dadosImg.uri,
+      type: dadosImg.type,
+      name: dadosImg.fileName,
+    });
+    const config = {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'multipart/form-data',
+      },
+      body: data,
+
+    };
+    fetch('http://' + api + ':3000/usuarios/uploadperfil/' + id, config)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        //console.log(responseJson);
+        if (responseJson.mensagem == 'Ok') {
+          this._loadDados();
           ToastAndroid.showWithGravity(
             'Uplaod efetuado com sucesso',
             ToastAndroid.LONG,
@@ -133,8 +211,12 @@ export default class EditarPerfil extends React.Component {
       <Container>
         <KeyboardAvoidingView style={styles.container}>
           <View>
-            <ImageBackground source={{ uri: this.state.capaUser }} style={styles.capa}></ImageBackground>
-            <Thumbnail large source={{ uri: this.state.uriCelular }} style={styles.img} />
+            <View>
+              <ImageBackground source={{ uri: 'http://' + api + ':3000/fotoperfil/' + this.state.capaUser }} style={styles.capa}>
+                <Icon name="camera-alt" size={30} style={styles.icons2} onPress={this._Escolhecapa} />
+              </ImageBackground>
+            </View>
+            <Thumbnail large source={{ uri: 'http://' + api + ':3000/fotoperfil/' + this.state.fotoUser }} style={styles.img} />
             <Icon name="camera-alt" size={30} style={styles.icons} onPress={this._EscolheImg} />
           </View>
           <ScrollView style={styles.lista}>
@@ -145,7 +227,7 @@ export default class EditarPerfil extends React.Component {
             <Text style={styles.text}> Telefone </Text>
             <TextInputMask style={styles.input}
               placeholder='(xx)xxxxx-xxxx'
-              placeholderTextColor="#FFFFFF" 
+              placeholderTextColor="#FFFFFF"
               type={'cel-phone'}
               options={{
                 maskType: 'BRL',
@@ -196,10 +278,16 @@ const styles = StyleSheet.create({
     marginTop: '22%',
     flex: 1
   },
-  icons:{
-    color:'#FFD700',
-    marginTop:-35,
-    marginLeft:'57%'
+  icons: {
+    color: '#FFD700',
+    marginTop: -35,
+    marginLeft: '57%'
+  },
+  icons2: {
+    color: '#FFD700',
+    marginBottom: -60,
+    marginTop: 40,
+    marginLeft: '85%'
   }
 
 });
