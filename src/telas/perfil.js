@@ -140,8 +140,8 @@ const perfil2 = StyleSheet.create({
   },
   frase: {
     color: 'white',
-    fontSize: 10,
-    marginLeft: '18%',
+    fontSize: 15,
+    marginLeft: '30%',
     width: 300
   },
   addFriend: {
