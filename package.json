@@ -16,6 +16,7 @@
     "@react-navigation/native": "^5.0.5",
     "@react-navigation/stack": "^5.0.5",
     "@redwallsolutions/button-component-module": "^1.8.3",
+    "lottie-react-native": "^3.3.2",
     "native-base": "^2.13.8",
     "react": "16.9.0",
     "react-icons": "^3.9.0",

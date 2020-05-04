@@ -59,7 +59,6 @@ export default class Perfil extends Component {
   };
   render() {
     const api = ip;
-    const imgBack = 'https://img.huffingtonpost.com/asset/5d5d2a653f00005c005b1a1b.jpeg?ops=crop_32_0_696_400,scalefit_630_noupscale';
     return (
       <>
         <Container style={{ backgroundColor: '#191919' }}>
@@ -83,7 +82,7 @@ export default class Perfil extends Component {
                 </Col>
               </Row>
               <Row size={75}>
-                <Col style={perfil2.bloco}>
+                <Col style={perfil2.bloco} onPress={() => this.props.navigation.navigate('amigos')}>
                   <Icon name="people" size={80} style={perfil2.icons} />
                   <Text style={perfil2.text}>Amigos</Text>
                 </Col>

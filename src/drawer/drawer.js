@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { createAppContainer } from 'react-navigation';
 import { createDrawerNavigator } from 'react-navigation-drawer';
-import Perfil from '../telas/perfil';
+//import Perfil from '../telas/perfil';
+import NavegaPerfil from '../telasperfil/navegaperfil';
 import EditarPerfil from './editarPerfil';
 import drawerCustom from './drawerCustom';
 import TermosUso from './termosUso';
 const MyDrawerNavigator = createDrawerNavigator({
   Perfil: {
-    screen: Perfil,
+    screen: NavegaPerfil,
   },
   EditarPerfil: {
     screen: EditarPerfil,
