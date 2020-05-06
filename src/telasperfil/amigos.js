@@ -81,6 +81,8 @@ export default class Amigos extends Component {
                     </Item>
                 </Header>
                 {this.state.show ? (
+                    <>
+                    <Text style={styles.TextAmigos} >Amigos</Text>
                     <FlatList
                     data={this.state.DadosAmigos}
                     renderItem={({ item }) =>
@@ -98,8 +100,11 @@ export default class Amigos extends Component {
                         </TouchableHighlight>
                     }
                     keyExtractor={item => item.id_user.toString()}
-                />
-                ) : <FlatList
+                /></>
+                ) : 
+                <>
+                <Text style={styles.TextAmigos} >Resultado...</Text>
+                <FlatList
                         data={this.state.dataSource}
                         renderItem={({ item }) =>
                             <TouchableHighlight
@@ -116,7 +121,8 @@ export default class Amigos extends Component {
                             </TouchableHighlight>
                         }
                         keyExtractor={item => item.id_user.toString()}
-                    />}
+                    /></>
+                    }
             </Container>
         );
     }
@@ -138,5 +144,10 @@ const styles = StyleSheet.create({
     },
     container: {
         backgroundColor: "#303030"
+    },
+    TextAmigos:{
+        marginLeft:'3.5%',
+        fontWeight:'bold',
+        color:'#FFD700'
     }
 });

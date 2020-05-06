@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Image, View, StyleSheet, ImageBackground, TouchableHighlight, AsyncStorage, Button, ScrollView, ToastAndroid } from 'react-native';
-import { Container, Thumbnail, Text,Picker, Form} from 'native-base';
+import { Container, Thumbnail, Text, Picker, Form } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import ip from '../components/ip';
 export default class Perfilusuario extends Component {
@@ -22,12 +22,16 @@ export default class Perfilusuario extends Component {
             text: '',
             fotoUser: '',
             frase: '',
-            capaUser: ''
+            capaUser: '',
+            dadosAmizade: [],
+            idUserMain: '',
+            statusAmizade: ''
         }
     }
     async componentDidMount() {
         this.willBlurListener = this.props.navigation.addListener('willFocus', () => {
             this.loadRepositories();
+            this._verificaAmizade();
         })
     }
     componentWillUnmount() {
@@ -50,7 +54,7 @@ export default class Perfilusuario extends Component {
                 }, function () {
 
                 });
-                //console.log(this.state.dataSource[0].nome)
+
             })
             .catch((error) => {
                 //console.error(error);
@@ -61,10 +65,6 @@ export default class Perfilusuario extends Component {
                 );
             });
     }
-    _signOutAsync = async () => {
-        await AsyncStorage.clear();
-        this.props.navigation.navigate('Auth');
-    };
     _fotousuario() {
         const api = ip;
         if (this.state.fotoUser == null) {
@@ -73,7 +73,99 @@ export default class Perfilusuario extends Component {
             return <Thumbnail source={{ uri: 'http://' + api + ':3000/fotoperfil/' + this.state.fotoUser }} style={[perfil2.foto]} />
         }
     }
+    _verificaAmizade = async () => {
+        const idUserLogado = await AsyncStorage.getItem('idUsuario');
+        const { navigation } = this.props;
+        const id = navigation.getParam('itemId', 'NO-ID');
+        const api = ip;
+        return fetch('http://' + api + ':3000/usuarios/verificaamizade/' + id + '/' + idUserLogado)
+            .then((response) => response.json())
+            .then((responseJson) => {
+                const dadosAmizade = responseJson
+                if (dadosAmizade.mensagem == '1') {
+                    this.setState({
+                        statusAmizade: '1'
+                    })
+                    //console.log(this.state.statusAmizade)
+                } else {
+                    this.setState({
+                        statusAmizade: '0'
+                    })
+                    //console.log(this.state.statusAmizade)
+                }
+            })
+            .catch((error) => {
+                //console.error(error);
+                ToastAndroid.showWithGravity(
+                    'Falha na conexão.',
+                    ToastAndroid.LONG,
+                    ToastAndroid.CENTER,
+                );
+            });
 
+    }
+    _RetornaBtn() {
+        const verificaAmizade = this.state.statusAmizade
+        if (verificaAmizade === '0') {
+            return (
+                <TouchableHighlight
+                    onPress={this._adiciona}
+                    style={perfil2.btnClickContain}
+                    underlayColor='#FFFF00'>
+                    <View
+                        style={perfil2.btnContainer}>
+                        <Icon
+                            name='person-add'
+                            size={25}
+                            color='#000000'
+                            style={perfil2.btnIcon} />
+                        <Text style={perfil2.btnText}>Adicionar aos amigos</Text>
+                    </View>
+                </TouchableHighlight>
+            )
+        } else {
+            return (
+                <TouchableHighlight
+                    style={perfil2.btnClickContain}
+                    underlayColor='#FFFF00'>
+                    <View
+                        style={perfil2.btnContainer}>
+                        <Icon
+                            name='cancel'
+                            size={25}
+                            color='#000000'
+                            style={perfil2.btnIcon} />
+                        <Text style={perfil2.btnText}>Desfazer Amizade</Text>
+                    </View>
+                </TouchableHighlight>
+            )
+        }
+    }
+    _adiciona = async () => {
+        console.log('adicionar clicado')
+        const idUserLogado = await AsyncStorage.getItem('idUsuario');
+        const api = ip;
+        const { navigation } = this.props;
+        const id = navigation.getParam('itemId', 'NO-ID');
+        fetch('http://' + api + ':3000/usuarios/adicionaramigos/'+idUserLogado, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                idSolicitado:id
+            }),
+        }).catch((error) => {
+            console.error(error);
+            ToastAndroid.showWithGravity(
+                'Falha na conexão.',
+                ToastAndroid.LONG,
+                ToastAndroid.CENTER,
+            );
+        });
+
+    }
     render() {
         const api = ip;
         return (
@@ -90,19 +182,7 @@ export default class Perfilusuario extends Component {
                             <Text style={[perfil2.frase]}> {this.state.frase}</Text>
                         </View>
                     </View>
-                    <TouchableHighlight
-                            style={perfil2.btnClickContain}
-                            underlayColor='#FFFF00'>
-                            <View
-                                style={perfil2.btnContainer}>
-                                <Icon
-                                    name='person-add'
-                                    size={25}
-                                    color='#000000'
-                                    style={perfil2.btnIcon} />
-                                <Text style={perfil2.btnText}>Adicionar aos amigos</Text>
-                            </View>
-                        </TouchableHighlight>
+                    {this._RetornaBtn()}
                     <Grid style={{ marginTop: 12 }}>
                         <ScrollView>
                             <Row size={75}>
