@@ -76,8 +76,8 @@ export default class Perfil extends Component {
           <Grid style={{ marginTop: 45 }}>
             <ScrollView>
               <Row size={75}>
-                <Col style={perfil2.blocoNoft}>
-                  <Icon name="notifications" size={40} style={perfil2.notificacao} />
+                <Col style={perfil2.blocoNoft} onPress={() => this.props.navigation.navigate('notificacao')}>
+                  <Icon name="notifications" size={40} style={perfil2.notificacao}  />
                   <Text style={perfil2.TextNotf}>Pré-venda de Viuva-Negra já disponível!</Text>
                 </Col>
               </Row>

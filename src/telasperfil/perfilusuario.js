@@ -87,11 +87,15 @@ export default class Perfilusuario extends Component {
                         statusAmizade: '1'
                     })
                     //console.log(this.state.statusAmizade)
-                } else {
+                } else if(dadosAmizade.mensagem == '0'){
                     this.setState({
                         statusAmizade: '0'
                     })
                     //console.log(this.state.statusAmizade)
+                }else{
+                    this.setState({
+                        statusAmizade: '2'
+                    })
                 }
             })
             .catch((error) => {
@@ -123,7 +127,7 @@ export default class Perfilusuario extends Component {
                     </View>
                 </TouchableHighlight>
             )
-        } else {
+        } else if(verificaAmizade === '1') {
             return (
                 <TouchableHighlight
                     style={perfil2.btnClickContain}
@@ -139,10 +143,26 @@ export default class Perfilusuario extends Component {
                     </View>
                 </TouchableHighlight>
             )
+        }else{
+            return (
+                <TouchableHighlight
+                    style={perfil2.btnClickContain}
+                    underlayColor='#FFFF00'>
+                    <View
+                        style={perfil2.btnContainer}>
+                        <Icon
+                            name='done'
+                            size={25}
+                            color='#000000'
+                            style={perfil2.btnIcon} />
+                        <Text style={perfil2.btnText}>Solicitação enviada</Text>
+                    </View>
+                </TouchableHighlight>
+            )
         }
     }
     _adiciona = async () => {
-        console.log('adicionar clicado')
+        //console.log('adicionar clicado')
         const idUserLogado = await AsyncStorage.getItem('idUsuario');
         const api = ip;
         const { navigation } = this.props;

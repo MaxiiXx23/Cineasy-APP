@@ -3,6 +3,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import Perfil from '../telas/perfil';
 import Amigos from './amigos';
 import Perfilusuario from './perfilusuario';
+import Notificacao from './notificacao';
 const navegaUsuario = createStackNavigator({
     usuario: {
         screen: Perfilusuario,
@@ -21,7 +22,27 @@ const NavegaPerfil = createStackNavigator({
     amigos: {
         screen: Amigos,
         navigationOptions: {
-            headerShown: false,
+            headerTitle:'Procurar usuários',
+            headerTintColor: 'white',
+            headerStyle: {
+                backgroundColor: '#191919',
+            },
+            headerTitleStyle: {
+                color: 'white'
+            },
+        },
+    },
+    notificacao: {
+        screen: Notificacao,
+        navigationOptions: {
+            headerTitle:'Notificação',
+            headerTintColor: 'white',
+            headerStyle: {
+                backgroundColor: '#191919',
+            },
+            headerTitleStyle: {
+                color: 'white'
+            },
         },
     },
     perfilusuario: {

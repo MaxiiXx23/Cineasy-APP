@@ -27,7 +27,6 @@ export default class Amigos extends Component {
                     console.log(responseJson)
                     this.setState({
                         DadosAmigos: responseJson,
-                    }, function () {
                     });
                 }).catch((error) => {
                     //console.error(error);
