@@ -89,6 +89,7 @@ export default class Amigos extends Component {
                             onPress={() => {
                                 this.props.navigation.navigate('perfilusuario', {
                                     itemId: item.id_user,
+                                    id_amigos: item.id_amigos
                                 });
                             }}
                         >

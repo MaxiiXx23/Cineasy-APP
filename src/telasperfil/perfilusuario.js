@@ -24,7 +24,7 @@ export default class Perfilusuario extends Component {
             frase: '',
             capaUser: '',
             dadosAmizade: [],
-            idUserMain: '',
+            idUsuarioLogado: '',
             statusAmizade: ''
         }
     }
@@ -39,6 +39,10 @@ export default class Perfilusuario extends Component {
     }
     loadRepositories = async () => {
         const { navigation } = this.props;
+        const idUserLogado = await AsyncStorage.getItem('idUsuario');
+        this.setState({
+            idUsuarioLogado:idUserLogado
+        })
         const id = navigation.getParam('itemId', 'NO-ID');
         //console.log(id)
         const api = ip;
@@ -50,8 +54,6 @@ export default class Perfilusuario extends Component {
                     fotoUser: responseJson[0].fotoUser,
                     frase: responseJson[0].frase,
                     capaUser: responseJson[0].capaUser
-
-                }, function () {
 
                 });
 
@@ -87,12 +89,12 @@ export default class Perfilusuario extends Component {
                         statusAmizade: '1'
                     })
                     //console.log(this.state.statusAmizade)
-                } else if(dadosAmizade.mensagem == '0'){
+                } else if (dadosAmizade.mensagem == '0') {
                     this.setState({
                         statusAmizade: '0'
                     })
                     //console.log(this.state.statusAmizade)
-                }else{
+                } else {
                     this.setState({
                         statusAmizade: '2'
                     })
@@ -108,9 +110,39 @@ export default class Perfilusuario extends Component {
             });
 
     }
-    _RetornaBtn() {
+    _RetornaBtn(){
         const verificaAmizade = this.state.statusAmizade
-        if (verificaAmizade === '0') {
+        const idUserLogado = this.state.idUsuarioLogado
+        const { navigation } = this.props;
+        const Pendente = navigation.getParam('Pendente', 'NO-ID');
+        const idUser = navigation.getParam('itemId', 'NO-ID');
+        console.log(idUser)
+        if(idUserLogado == idUser){
+            return <View style={perfil2.containerBtns}><Text></Text></View>
+        }else if (Pendente == '3') {
+            return (
+                <View style={perfil2.containerBtns}>
+                    <TouchableHighlight
+                        onPress={this._confirmar}
+                        style={perfil2.btnClickContain2}
+                        underlayColor='#FFFF00'>
+                        <View
+                            style={perfil2.btnContainer}>
+                            <Text style={perfil2.btnText2}>Confirmar</Text>
+                        </View>
+                    </TouchableHighlight>
+                    <TouchableHighlight
+                        onPress={this._excluirAmigo}
+                        style={perfil2.btnClickContain2}
+                        underlayColor='#FFFF00'>
+                        <View
+                            style={perfil2.btnContainer}>
+                            <Text style={perfil2.btnText2}>Excluir</Text>
+                        </View>
+                    </TouchableHighlight>
+                </View>
+            )
+        } else if (verificaAmizade === '0') {
             return (
                 <TouchableHighlight
                     onPress={this._adiciona}
@@ -127,9 +159,10 @@ export default class Perfilusuario extends Component {
                     </View>
                 </TouchableHighlight>
             )
-        } else if(verificaAmizade === '1') {
+        } else if (verificaAmizade === '1') {
             return (
                 <TouchableHighlight
+                    onPress={this._excluirAmigo}
                     style={perfil2.btnClickContain}
                     underlayColor='#FFFF00'>
                     <View
@@ -143,7 +176,7 @@ export default class Perfilusuario extends Component {
                     </View>
                 </TouchableHighlight>
             )
-        }else{
+        } else {
             return (
                 <TouchableHighlight
                     style={perfil2.btnClickContain}
@@ -167,14 +200,14 @@ export default class Perfilusuario extends Component {
         const api = ip;
         const { navigation } = this.props;
         const id = navigation.getParam('itemId', 'NO-ID');
-        fetch('http://' + api + ':3000/usuarios/adicionaramigos/'+idUserLogado, {
+        fetch('http://' + api + ':3000/usuarios/adicionaramigos/' + idUserLogado, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                idSolicitado:id
+                idSolicitado: id
             }),
         }).catch((error) => {
             console.error(error);
@@ -185,6 +218,63 @@ export default class Perfilusuario extends Component {
             );
         });
 
+    }
+    _excluirAmigo = async () => {
+        const { navigation } = this.props;
+        const id_amigos = navigation.getParam('id_amigos', 'NO-ID');
+        const api = ip;
+        //console.log(id_amigos)
+        fetch('http://' + api + ':3000/usuarios/excluiramigos/' + id_amigos, {
+            method: 'DELETE',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then((response) => response.json()).then((responseJson) => {
+            if (responseJson.mensagem == '1') {
+                ToastAndroid.showWithGravity(
+                    'Amizade desfeita.',
+                    ToastAndroid.LONG,
+                    ToastAndroid.CENTER,
+                );
+                this._verificaAmizade();
+            }
+        }).catch((error) => {
+            console.error(error);
+            ToastAndroid.showWithGravity(
+                'Falha na conexão.',
+                ToastAndroid.LONG,
+                ToastAndroid.CENTER,
+            );
+        });
+    }
+    _confirmar = async () => {
+        const { navigation } = this.props;
+        const id_amigos = navigation.getParam('id_amigos', 'NO-ID');
+        const api = ip;
+        fetch('http://' + api + ':3000/usuarios/confirmaramizade/' + id_amigos, {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then((response) => response.json()).then((responseJson) => {
+            if (responseJson.mensagem == '1') {
+                ToastAndroid.showWithGravity(
+                    'Agora vocês são amigos.',
+                    ToastAndroid.LONG,
+                    ToastAndroid.CENTER,
+                );
+                this._verificaAmizade();
+            }
+        }).catch((error) => {
+            console.error(error);
+            ToastAndroid.showWithGravity(
+                'Falha na conexão.',
+                ToastAndroid.LONG,
+                ToastAndroid.CENTER,
+            );
+        });
     }
     render() {
         const api = ip;
@@ -333,6 +423,17 @@ const perfil2 = StyleSheet.create({
         marginTop: 38,
         marginBottom: 5,
     },
+    btnClickContain2: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'stretch',
+        backgroundColor: '#FFD700',
+        borderRadius: 5,
+        padding: 8,
+        marginTop: 38,
+        marginBottom: 5,
+        marginLeft:'18%'
+    },
     btnContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
@@ -350,7 +451,14 @@ const perfil2 = StyleSheet.create({
         marginLeft: 10,
         marginTop: 0,
     },
-
-
-
+    btnText2: {
+        fontSize: 18,
+        color: '#FAFAFA',
+        marginLeft: 2,
+        marginTop: 0,
+    },
+    containerBtns:{
+        flexDirection:'row',
+        
+    }
 });

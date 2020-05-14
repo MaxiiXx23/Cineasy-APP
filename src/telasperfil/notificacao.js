@@ -24,7 +24,7 @@ export default class Notificacao extends Component {
         return fetch(`http://${api}:3000/usuarios/listarpendentes/${id}`)
             .then((response) => response.json())
             .then((responseJson) => {
-                //console.log(responseJson)
+                console.log(responseJson)
                 this.setState({
                     dataSource: responseJson,
                 });
@@ -54,6 +54,8 @@ export default class Notificacao extends Component {
                             onPress={() => {
                                 this.props.navigation.navigate('perfilusuario', {
                                     itemId: item.id_user,
+                                    Pendente:'3',
+                                    id_amigos:item.id_amigos
                                 });
                             }}
                         >

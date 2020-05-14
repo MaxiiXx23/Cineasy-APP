@@ -6,12 +6,16 @@ import NavegaPerfil from '../telasperfil/navegaperfil';
 import EditarPerfil from './editarPerfil';
 import drawerCustom from './drawerCustom';
 import TermosUso from './termosUso';
+import Planos from './planos';
 const MyDrawerNavigator = createDrawerNavigator({
   Perfil: {
     screen: NavegaPerfil,
   },
   EditarPerfil: {
     screen: EditarPerfil,
+  },
+  Planos: {
+    screen: Planos,
   },
   TermosUso: {
     screen: TermosUso

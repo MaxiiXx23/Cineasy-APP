@@ -91,7 +91,7 @@ export default class drawerCustom extends Component {
                         </Text>
                     </ListItem>
                     <ListItem style={styles.listItem}>
-                        <Text style={styles.texto} onPress={this.navigateToScreen('EditarPerfil')}>
+                        <Text style={styles.texto} onPress={this.navigateToScreen('Planos')}>
                             Planos Cineasy
                         </Text>
                     </ListItem>
