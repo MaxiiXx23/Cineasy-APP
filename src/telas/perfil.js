@@ -78,7 +78,7 @@ export default class Perfil extends Component {
               <Row size={75}>
                 <Col style={perfil2.blocoNoft} onPress={() => this.props.navigation.navigate('notificacao')}>
                   <Icon name="notifications" size={40} style={perfil2.notificacao}  />
-                  <Text style={perfil2.TextNotf}>Pré-venda de Viuva-Negra já disponível!</Text>
+                  <Text style={perfil2.TextNotf}>#FiqueEmCasa</Text>
                 </Col>
               </Row>
               <Row size={75}>

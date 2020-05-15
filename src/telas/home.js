@@ -117,9 +117,9 @@ export default class Home extends React.Component {
               return <Card style={styles.card} >
                 <CardItem style={styles.card} >
                   <Left>
-                    <Thumbnail source={{ uri: 'http://' + this.state.api + ':3000/imgs/1583688845268-images.jpeg' }} />
+                    <Thumbnail source={{ uri: 'http://' + this.state.api + ':3000/fotoperfil/cinr.jpg' }} />
                     <Body>
-                      <Text style={{ fontWeight: 'bold', color: "#fff" }}>{item.nome}</Text>
+                      <Text style={{ fontWeight: 'bold', color: "#fff" }}>Cinemark</Text>
                       <Text style={{ color: "#fff" }} note>{item.note}</Text>
                     </Body>
                   </Left>
@@ -171,9 +171,9 @@ export default class Home extends React.Component {
               return <Card style={styles.card} >
                 <CardItem style={styles.card} >
                   <Left>
-                    <Thumbnail source={{ uri: 'http://' + this.state.api + ':3000/imgs/1583688845268-images.jpeg' }} />
+                    <Thumbnail source={{ uri: 'http://' + this.state.api + ':3000/fotoperfil/cinr.jpg' }} />
                     <Body>
-                      <Text style={{ fontWeight: 'bold', color: "#fff" }}>{item.nome}</Text>
+                      <Text style={{ fontWeight: 'bold', color: "#fff" }}>Cinemark</Text>
                       <Text style={{ color: "#fff" }} note>{item.note}</Text>
                     </Body>
                   </Left>
