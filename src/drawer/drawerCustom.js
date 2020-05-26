@@ -96,13 +96,8 @@ export default class drawerCustom extends Component {
                         </Text>
                     </ListItem>
                     <ListItem style={styles.listItem}>
-                        <Text style={styles.texto} onPress={this.navigateToScreen('EditarPerfil')}>
-                            Formas de Pagamento
-                        </Text>
-                    </ListItem>
-                    <ListItem style={styles.listItem}>
-                        <Text style={styles.texto} onPress={this.navigateToScreen('EditarPerfil')}>
-                            Privacidade
+                        <Text style={styles.texto} onPress={this.navigateToScreen('AlternarSenha')}>
+                            Alterar senha
                         </Text>
                     </ListItem>
                     <ListItem style={styles.listItem}>

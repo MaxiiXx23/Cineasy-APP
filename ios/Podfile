@@ -38,11 +38,16 @@ target 'Cineasy' do
 
   pod 'react-native-maps', :path => '../node_modules/react-native-maps'
 
-  pod 'react-native-geolocation', :path => '../node_modules/@react-native-community/geolocation'
 
   pod 'RCTYouTube', :path => '../node_modules/react-native-youtube'
 
   pod 'react-native-video', :path => '../node_modules/react-native-video'
+
+
+
+
+
+
 
   target 'CineasyTests' do
     inherit! :search_paths

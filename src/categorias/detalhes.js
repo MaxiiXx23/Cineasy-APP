@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, Button, TouchableHighlight, Image, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Button, TouchableHighlight, Image, StyleSheet, ScrollView, AsyncStorage, ToastAndroid } from 'react-native';
 import { Container, Header, Content, Card, CardItem, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import ip from '../components/ip'
-import YouTube from 'react-native-youtube';
+import { Rating, AirbnbRating } from 'react-native-ratings';
+import ip from '../components/ip';
 export default class Detalhes extends React.Component {
 
     constructor(props) {
@@ -11,14 +11,32 @@ export default class Detalhes extends React.Component {
         this.state = {
             dadosFilme: [],
             statusplay: true,
-            trailler: ''
+            trailler: '',
+            rating: '',
+            idUser: '',
+            idFilme: '',
+            RatingTotal:''
         };
     }
-    componentDidMount() {
+    async componentDidMount() {
+        this.willBlurListener = this.props.navigation.addListener('willFocus', () => {
+            this.loadRepositories();
+        })
+        
+    }
+     async componentWillUnmount() {
+        this.willBlurListener.remove();
+    }
+    loadRepositories = async ()=>{
+        const id = await AsyncStorage.getItem('idUsuario');
         const { navigation } = this.props;
         const idFilme = navigation.getParam('itemId', 'NO-ID');
-        //console.log(idFilme)
+        this.setState({
+            idUser: id,
+            idFilme: idFilme
+        })
         const api = ip;
+        this._totalRating();
         return fetch('http://' + api + ':3000/filmes/detalhes/' + idFilme)
             .then((response) => response.json())
             .then((responseJson) => {
@@ -50,41 +68,164 @@ export default class Detalhes extends React.Component {
     _classificacao() {
         if (this.state.classf == 'L') {
             return <View style={[styles.livre]}>
-                    <Text style={[styles.colorClass]}> L </Text>
-                    </View>;
-        }else if(this.state.classf == '10'){
+                <Text style={[styles.colorClass]}> L </Text>
+            </View>;
+        } else if (this.state.classf == '10') {
             return <View style={[styles.class10]}>
-                    <Text style={[styles.colorClass]}> 10 </Text>
-                    </View>;
+                <Text style={[styles.colorClass]}> 10 </Text>
+            </View>;
         } else if (this.state.classf == '12') {
             return <View style={[styles.class12]}>
-                    <Text style={[styles.colorClass]}> 12 </Text>
-                   </View>;
-        }else if(this.state.classf == '14'){
+                <Text style={[styles.colorClass]}> 12 </Text>
+            </View>;
+        } else if (this.state.classf == '14') {
             return <View style={[styles.class14]}>
-                    <Text style={[styles.colorClass]}> 14 </Text>
-                   </View>;
-        }else if(this.state.classf == '16'){
+                <Text style={[styles.colorClass]}> 14 </Text>
+            </View>;
+        } else if (this.state.classf == '16') {
             return <View style={[styles.class16]}>
-                    <Text style={[styles.colorClass]}> 16 </Text>
-                   </View>;
-        }else{
+                <Text style={[styles.colorClass]}> 16 </Text>
+            </View>;
+        } else {
             return <View style={[styles.class18]}>
-                    <Text style={[styles.colorClass]}> 18 </Text>
-                   </View>;
+                <Text style={[styles.colorClass]}> 18 </Text>
+            </View>;
         }
     }
-
+    ratingCompleted = async (rating) => {
+        const ratingValue = rating
+        this.setState({
+            rating: ratingValue
+        });
+        this._confirmaRating();
+    }
+    _confirmaRating = async () => {
+        const api = ip;
+        const id = this.state.idUser
+        const idFilme = this.state.idFilme
+        return fetch('http://' + api + ':3000/filmes/confirmarating/' + id + '/' + idFilme)
+            .then((response) => response.json())
+            .then((json) => {
+                if (json.mensagem == '1') {
+                    this._upadteRating();
+                } else {
+                   this._addRating();
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
+    _upadteRating = async () => {
+        const id = this.state.idUser
+        const idFilme = this.state.idFilme
+        const ratingValue = this.state.rating
+        const api = ip;
+        fetch(`http://${api}:3000/filmes/updaterating`, {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                Id_usuario: id,
+                Id_filme: idFilme,
+                rating: ratingValue
+            }),
+        }).then((response) => response.json())
+            .then((json) => {
+                if (json.mensagem == '1') {
+                    ToastAndroid.showWithGravity(
+                        'Filme Avaliado',
+                        ToastAndroid.LONG,
+                        ToastAndroid.CENTER,
+                    );
+                } else {
+                    ToastAndroid.showWithGravity(
+                        'Falha na conexão.',
+                        ToastAndroid.LONG,
+                        ToastAndroid.CENTER,
+                    );
+                }
+            }).catch((error) => {
+                //console.error(error);
+                ToastAndroid.showWithGravity(
+                    'Falha na conexão.',
+                    ToastAndroid.LONG,
+                    ToastAndroid.CENTER,
+                );
+            });
+    }
+    _addRating = async () => {
+        const id = this.state.idUser
+        const idFilme = this.state.idFilme
+        const ratingValue = this.state.rating
+        const api = ip;
+        fetch(`http://${api}:3000/filmes/addrating`, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                Id_usuario: id,
+                Id_filme: idFilme,
+                rating: ratingValue
+            }),
+        }).then((response) => response.json())
+        .then((json) => {
+            if (json.mensagem == '1') {
+                ToastAndroid.showWithGravity(
+                    'Filme Avaliado.',
+                    ToastAndroid.LONG,
+                    ToastAndroid.CENTER,
+                );
+            } else {
+                ToastAndroid.showWithGravity(
+                    'Falha na conexão.',
+                    ToastAndroid.LONG,
+                    ToastAndroid.CENTER,
+                );
+            }
+        }).catch((error) => {
+            //console.error(error);
+            ToastAndroid.showWithGravity(
+                'Falha na conexão.',
+                ToastAndroid.LONG,
+                ToastAndroid.CENTER,
+            );
+        });
+        ToastAndroid.showWithGravity(
+            'Filme avaliado.',
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER,
+        );
+    }
+    _totalRating = async () => {
+        const api = ip;
+        const idFilme = this.state.idFilme
+        return fetch('http://' + api + ':3000/filmes/totalrating/' + idFilme)
+            .then((response) => response.json())
+            .then((json) => {
+                this.setState({
+                    RatingTotal:json.ratingFinal
+                })
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
     render() {
         const api = ip;
+        const ratingAvaliacao = this.state.RatingTotal
         return (
             <Container style={[styles.container]}>
                 <ScrollView >
                     <View style={[styles.viewImg]}>
-                         <Text style={[styles.titulo]}>
+                        <Text style={[styles.titulo]}>
                             {this.state.nome}
                         </Text>
-                        <Image source={{ uri:'http://' + api + ':3000/filmes/poster/'+ this.state.foto}} style={[styles.img]} />
+                        <Image source={{ uri: 'http://' + api + ':3000/filmes/poster/' + this.state.foto }} style={[styles.img]} />
                     </View>
                     <View style={[styles.viewNome]}>
                         {this._classificacao()}
@@ -102,6 +243,21 @@ export default class Detalhes extends React.Component {
                         <Text style={[styles.nome]}>
                             Diretor: {this.state.diretor}
                         </Text>
+                    </View>
+                    <View style={[styles.atualrating]} >
+                        <Text style={[styles.avaliacaoText]}>Avaliações:</Text>
+                        <Text style={[styles.avaliacao]}>{ratingAvaliacao}</Text>
+                        <Icon
+                            name='star' size={25} color='#000000' style={styles.IconStar} />
+                    </View>
+                    <View style={[styles.rating]}>
+                        <AirbnbRating
+                            count={5}
+                            reviews={["Muito ruim", "Ruim", "Okay", "Bom", "Espetacular"]}
+                            defaultRating={5}
+                            size={20}
+                            onFinishRating={this.ratingCompleted}
+                        />
                     </View>
                     <View>
                         <TouchableHighlight
@@ -158,7 +314,7 @@ const styles = StyleSheet.create({
     viewImg: {
         marginLeft: '2%',
         marginTop: '5%',
-        alignItems:'center'
+        alignItems: 'center'
     },
     nome: {
         color: '#FFFFFF',
@@ -196,8 +352,8 @@ const styles = StyleSheet.create({
     },
     viewNome: {
         flexDirection: 'row',
-        marginBottom:2,
-        marginTop:1
+        marginBottom: 2,
+        marginTop: 1
     },
     duracao: {
         color: '#FFFFFF',
@@ -206,13 +362,13 @@ const styles = StyleSheet.create({
     sinopse: {
         lineHeight: 19,
         color: '#FFFFFF',
-        marginTop:7
+        marginTop: 7
     },
     titulo: {
         fontWeight: 'bold',
         color: '#FFFFFF',
         fontSize: 17,
-        marginBottom:10
+        marginBottom: 10
     },
     colorClass: {
         color: '#FFFFFF'
@@ -265,8 +421,27 @@ const styles = StyleSheet.create({
         borderRadius: 2,
         marginLeft: '28%'
     },
-    classf:{
+    classf: {
         color: '#FFFFFF'
+    },
+    atualrating: {
+        alignContent: 'stretch',
+        flexDirection: 'row',
+    },
+    avaliacaoText: {
+        color: 'white'
+    },
+    IconStar: {
+        color: '#FFD700',
+        marginLeft: 4,
+        marginTop: -2
+    },
+    avaliacao: {
+        color: '#FFD700',
+        marginLeft: 10
+    },
+    rating: {
+        marginBottom: 10
     }
 
 })

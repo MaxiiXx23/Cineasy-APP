@@ -9,7 +9,6 @@ import {
     Image,
     StyleSheet
 } from 'react-native';
-import Geolocation from '@react-native-community/geolocation';
 import MapView from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import getDirections from 'react-native-google-maps-directions'

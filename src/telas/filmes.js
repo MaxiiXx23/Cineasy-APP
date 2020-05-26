@@ -4,6 +4,8 @@ import { Image, View, ActivityIndicator, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Tabs, Tab, TabHeading, Container, Header, Button, Item, Input, Content, Card, CardItem, Body, Text } from 'native-base';
 import Cartaz from '../categorias/EmCartaz';
+import EmAltaStack from '../categorias/EmAlta';
+import EstreiaStack from '../categorias/Estreia';
 export default class filmes extends Component {
   render() {
     return (
@@ -27,12 +29,12 @@ export default class filmes extends Component {
           </Tab>
           <Tab heading={<TabHeading style={style.tabHeading}><Text>Em Alta</Text></TabHeading>}>
             <View style={[styles.container, styles.horizontal]}>
-              <ActivityIndicator size="large" color="#FFD700" />
+              <EmAltaStack />
             </View>
           </Tab>
           <Tab heading={<TabHeading style={style.tabHeading}><Text>Estreias</Text></TabHeading>}>
             <View style={[styles.container, styles.horizontal]}>
-              <ActivityIndicator size="large" color="#FFD700" />
+              <EstreiaStack/>
             </View>
           </Tab>
         </Tabs>

@@ -7,6 +7,7 @@ import EditarPerfil from './editarPerfil';
 import drawerCustom from './drawerCustom';
 import TermosUso from './termosUso';
 import Planos from './planos';
+import AlternarSenha from './alterarsenha'
 const MyDrawerNavigator = createDrawerNavigator({
   Perfil: {
     screen: NavegaPerfil,
@@ -19,6 +20,9 @@ const MyDrawerNavigator = createDrawerNavigator({
   },
   TermosUso: {
     screen: TermosUso
+  },
+  AlternarSenha: {
+    screen: AlternarSenha
   },
 }, {
   //For the Custom sidebar menu we have to provide our CustomSidebarMenu

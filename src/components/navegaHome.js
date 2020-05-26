@@ -22,6 +22,9 @@ const NevegaHome = createStackNavigator({
         screen: Modaloptions,
         navigationOptions: {
             headerShown: false,
+            cardStyle:{
+                 backgroundColor: 'transparent' 
+            }
         },
     },
     Editar: {
@@ -30,7 +33,6 @@ const NevegaHome = createStackNavigator({
 },
     {
         mode: 'modal',
-        transparentCard:true,
     }
 );
 

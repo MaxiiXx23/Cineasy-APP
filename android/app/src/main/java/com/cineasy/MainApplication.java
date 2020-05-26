@@ -6,9 +6,9 @@ import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.brentvatne.react.ReactVideoPackage;
 import com.inprogress.reactnativeyoutube.ReactNativeYouTube;
-import com.reactnativecommunity.geolocation.GeolocationPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.imagepicker.ImagePickerPackage;
+import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
@@ -32,6 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
           List<ReactPackage> packages = new PackageList(this).getPackages();
           new VectorIconsPackage();
           packages.add(new LottiePackage());
+           new RNCWebViewPackage();
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
           return packages;

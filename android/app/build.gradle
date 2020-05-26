@@ -134,6 +134,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
+        
     }
     splits {
         abi {
@@ -180,16 +182,14 @@ android {
 }
 
 dependencies {
+    implementation 'com.android.support:multidex:1.0.3'
     implementation project(':lottie-react-native')
     implementation project(':react-native-video')
      implementation 'com.facebook.fresco:fresco:2.0.0'
-    // For animated GIF support
     implementation 'com.facebook.fresco:animated-gif:2.0.0'
-    // For WebP support, including animated WebP
     implementation 'com.facebook.fresco:animated-webp:2.0.0'
     implementation 'com.facebook.fresco:webpsupport:2.0.0'
     implementation project(':react-native-youtube')
-    implementation project(':@react-native-community_geolocation')
     implementation project(':react-native-maps')
     implementation project(':react-native-image-picker')
     implementation fileTree(dir: "libs", include: ["*.jar"])
@@ -197,6 +197,8 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
     implementation project(':react-native-vector-icons')
+    implementation project(':react-native-webview')
+    implementation fileTree(dir: "libs", include: ["*.jar"])
   // From node_modules
 
     if (enableHermes) {

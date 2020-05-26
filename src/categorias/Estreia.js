@@ -9,7 +9,7 @@ import ip from '../components/ip';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 console.disableYellowBox = true;
 
-class EmCartaz extends React.Component {
+class Estreia extends React.Component {
 
     constructor(props) {
         super(props);
@@ -22,7 +22,7 @@ class EmCartaz extends React.Component {
         if (this.state.loading) return;
         const { page } = this.state;
         const api = ip;
-        return fetch(`http://${api}:3000/filmes/listaemcartaz/${page}`)
+        return fetch(`http://${api}:3000/filmes/listaestreia/${page}`)
             .then((response) => response.json())
             .then((responseJson) => {
                 this.setState({
@@ -115,19 +115,19 @@ const styles = StyleSheet.create({
 })
 const RootStack = createStackNavigator(
     {
-        Emcartaz: EmCartaz,
+        Estreia: Estreia,
         Details: Detalhes,
         Trailer: Trailler
     },
     {
-        initialRouteName: 'Emcartaz',
+        initialRouteName: 'Estreia',
         headerMode: 'none'
     }
 );
 
 const AppContainer = createAppContainer(RootStack);
 
-export default class Cartaz extends React.Component {
+export default class EstreiaStack extends React.Component {
     render() {
         return <AppContainer />;
     }

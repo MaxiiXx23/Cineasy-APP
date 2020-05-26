@@ -102,6 +102,7 @@ export default class login extends React.Component {
               ToastAndroid.CENTER,
             );
           }
+          // colocar esse bloco dentro de um else kkkk
           let result = responseJson.token;
           //console.log(responseJson.id)
           this.setState({ Token: result });
