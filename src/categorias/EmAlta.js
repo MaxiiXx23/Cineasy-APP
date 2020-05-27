@@ -13,7 +13,7 @@ class EmAlta extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { isLoading: true,loading:false, page: 6 }
+        this.state = { isLoading: true,loading:false, page: 1 }
     }
     componentDidMount() {
         this.loadRepositories();

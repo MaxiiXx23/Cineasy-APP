@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { FlatList, Image, ActivityIndicator, Text, View, Dimensions, TouchableHighlight, TouchableWithoutFeedback, StyleSheet, ToastAndroid } from 'react-native';
+import { FlatList, Image, ActivityIndicator, Text, View, Dimensions, TouchableHighlight, TouchableWithoutFeedback, StyleSheet, ToastAndroid, AsyncStorage } from 'react-native';
 import { Container, Header, Content, Card, CardItem, Button, Thumbnail, Left, Body, Right } from 'native-base';
 import ip from '../components/ip';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -14,7 +14,8 @@ export default class Home extends React.Component {
       api: ip,
       page: 2,
       pause: true,
-      fullscreen:false
+      fullscreen: false,
+      idUser: ''
     }
   }
 
@@ -30,6 +31,10 @@ export default class Home extends React.Component {
   }
   loadRepositories = async () => {
     if (this.state.loading) return;
+    const id = await AsyncStorage.getItem('idUsuario');
+    this.setState({
+      idUser: id
+    })
     const { page } = this.state;
     const api = ip;
     return fetch(`http://${api}:3000/posts/ver/${page}`)
@@ -54,17 +59,92 @@ export default class Home extends React.Component {
   _handleDoubleTap = async () => {
     const now = Date.now();
     const DOUBLE_PRESS_DELAY = 300;
+    const api = ip;
+    const idUser = this.state.idUser
+    const idPost = this.state.id
     if (this.lastTap && (now - this.lastTap) < DOUBLE_PRESS_DELAY) {
-      this._curtir();
+      return fetch('http://' + api + ':3000/posts/confirmalike/' + idUser + '/' + idPost)
+        .then((response) => response.json())
+        .then((json) => {
+          if (json.mensagem == '1') {
+            this._deleteCurtida();
+          } else {
+            this._curtir();
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     } else {
       this.lastTap = now;
     }
   }
+  _deleteCurtida = async () => {
+    const api = ip;
+    const idUser = this.state.idUser
+    const idPost = this.state.id
+    fetch(`http://${api}:3000/posts/deletelike`, {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        Id_usuario: idUser,
+        Id_post: idPost,
+      }),
+    }).then((response) => response.json())
+      .then((json) => {
+        if (json.mensagem == '1') {
+          ToastAndroid.showWithGravity(
+            'Descurtido',
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER,
+          );
+        }
+      }).catch((error) => {
+        ToastAndroid.showWithGravity(
+          'Falha na conexão.',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+        );
+      });
+    this.loadRepositories();
+  }
+
   _curtir = async () => {
+    const api = ip;
+    const idUser = this.state.idUser
+    const idPost = this.state.id
+    fetch(`http://${api}:3000/posts/addlike`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        Id_usuario: idUser,
+        Id_post: idPost,
+      }),
+    }).then((response) => response.json())
+      .then((json) => {
+        if (json.mensagem == '1') {
+          this._addlike();
+        }
+      }).catch((error) => {
+        ToastAndroid.showWithGravity(
+          'Falha ao curtir',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+        );
+      });
+    this.loadRepositories();
+  }
+  _addlike = async () =>{
     const api = ip;
     const like = this.state.like
     const idPost = this.state.id
-    fetch(`http://${api}:3000/posts/like/`, {
+    fetch(`http://${api}:3000/posts/like`, {
       method: 'PUT',
       headers: {
         Accept: 'application/json',
@@ -74,19 +154,22 @@ export default class Home extends React.Component {
         like: like,
         id_post: idPost,
       }),
-    }).catch((error) => {
-      ToastAndroid.showWithGravity(
-        'Falha ao curtir',
-        ToastAndroid.LONG,
-        ToastAndroid.CENTER,
-      );
-    });
-    ToastAndroid.showWithGravity(
-      'Post curtido',
-      ToastAndroid.LONG,
-      ToastAndroid.CENTER,
-    );
-    this.loadRepositories();
+    }).then((response) => response.json())
+      .then((json) => {
+        if (json.mensagem == '1') {
+          ToastAndroid.showWithGravity(
+            'Post curtido',
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER,
+          );
+        }
+      }).catch((error) => {
+        ToastAndroid.showWithGravity(
+          'Falha ao curtir',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+        );
+      });
   }
   _pause = async () => {
     this.setState({
@@ -273,13 +356,13 @@ const styles = StyleSheet.create({
     height: 50,
     width: 35,
     marginTop: 5,
-    color:'#FFD700'
+    color: '#FFD700'
   },
   btnIcon2: {
     height: 50,
     width: 35,
     marginTop: 23,
-    color:'#FFD700'
+    color: '#FFD700'
 
   },
   backgroundVideo: {
@@ -287,6 +370,6 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     right: 0,
-    flex:1
+    flex: 1
   },
 })
