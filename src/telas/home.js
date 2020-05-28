@@ -96,11 +96,7 @@ export default class Home extends React.Component {
     }).then((response) => response.json())
       .then((json) => {
         if (json.mensagem == '1') {
-          ToastAndroid.showWithGravity(
-            'Descurtido',
-            ToastAndroid.LONG,
-            ToastAndroid.CENTER,
-          );
+          this._removelike();
         }
       }).catch((error) => {
         ToastAndroid.showWithGravity(
@@ -109,7 +105,6 @@ export default class Home extends React.Component {
           ToastAndroid.CENTER,
         );
       });
-    this.loadRepositories();
   }
 
   _curtir = async () => {
@@ -138,7 +133,6 @@ export default class Home extends React.Component {
           ToastAndroid.CENTER,
         );
       });
-    this.loadRepositories();
   }
   _addlike = async () =>{
     const api = ip;
@@ -170,6 +164,39 @@ export default class Home extends React.Component {
           ToastAndroid.CENTER,
         );
       });
+      this.loadRepositories();
+  }
+  _removelike = async () =>{
+    const api = ip;
+    const like = this.state.like
+    const idPost = this.state.id
+    fetch(`http://${api}:3000/posts/retiralike`, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        like: like,
+        id_post: idPost,
+      }),
+    }).then((response) => response.json())
+      .then((json) => {
+        if (json.mensagem == '1') {
+          ToastAndroid.showWithGravity(
+            'Like removido.',
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER,
+          );
+        }
+      }).catch((error) => {
+        ToastAndroid.showWithGravity(
+          'Falha ao curtir',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+        );
+      });
+      this.loadRepositories();
   }
   _pause = async () => {
     this.setState({

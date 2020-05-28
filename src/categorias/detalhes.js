@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button, TouchableHighlight, Image, StyleSheet, ScrollView, AsyncStorage, ToastAndroid } from 'react-native';
+import { View, Text, ImageBackground, TouchableHighlight, Image, StyleSheet, ScrollView, AsyncStorage, ToastAndroid } from 'react-native';
 import { Container, Header, Content, Card, CardItem, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Rating, AirbnbRating } from 'react-native-ratings';
@@ -15,19 +15,19 @@ export default class Detalhes extends React.Component {
             rating: '',
             idUser: '',
             idFilme: '',
-            RatingTotal:''
+            RatingTotal: ''
         };
     }
     async componentDidMount() {
         this.willBlurListener = this.props.navigation.addListener('willFocus', () => {
             this.loadRepositories();
         })
-        
+
     }
-     async componentWillUnmount() {
+    async componentWillUnmount() {
         this.willBlurListener.remove();
     }
-    loadRepositories = async ()=>{
+    loadRepositories = async () => {
         const id = await AsyncStorage.getItem('idUsuario');
         const { navigation } = this.props;
         const idFilme = navigation.getParam('itemId', 'NO-ID');
@@ -109,7 +109,7 @@ export default class Detalhes extends React.Component {
                 if (json.mensagem == '1') {
                     this._upadteRating();
                 } else {
-                   this._addRating();
+                    this._addRating();
                 }
             })
             .catch((error) => {
@@ -173,28 +173,28 @@ export default class Detalhes extends React.Component {
                 rating: ratingValue
             }),
         }).then((response) => response.json())
-        .then((json) => {
-            if (json.mensagem == '1') {
-                ToastAndroid.showWithGravity(
-                    'Filme Avaliado.',
-                    ToastAndroid.LONG,
-                    ToastAndroid.CENTER,
-                );
-            } else {
+            .then((json) => {
+                if (json.mensagem == '1') {
+                    ToastAndroid.showWithGravity(
+                        'Filme Avaliado.',
+                        ToastAndroid.LONG,
+                        ToastAndroid.CENTER,
+                    );
+                } else {
+                    ToastAndroid.showWithGravity(
+                        'Falha na conexão.',
+                        ToastAndroid.LONG,
+                        ToastAndroid.CENTER,
+                    );
+                }
+            }).catch((error) => {
+                //console.error(error);
                 ToastAndroid.showWithGravity(
                     'Falha na conexão.',
                     ToastAndroid.LONG,
                     ToastAndroid.CENTER,
                 );
-            }
-        }).catch((error) => {
-            //console.error(error);
-            ToastAndroid.showWithGravity(
-                'Falha na conexão.',
-                ToastAndroid.LONG,
-                ToastAndroid.CENTER,
-            );
-        });
+            });
         ToastAndroid.showWithGravity(
             'Filme avaliado.',
             ToastAndroid.LONG,
@@ -208,7 +208,7 @@ export default class Detalhes extends React.Component {
             .then((response) => response.json())
             .then((json) => {
                 this.setState({
-                    RatingTotal:json.ratingFinal
+                    RatingTotal: json.ratingFinal
                 })
             })
             .catch((error) => {
@@ -220,81 +220,82 @@ export default class Detalhes extends React.Component {
         const ratingAvaliacao = this.state.RatingTotal
         return (
             <Container style={[styles.container]}>
-                <ScrollView >
-                    <View style={[styles.viewImg]}>
-                        <Text style={[styles.titulo]}>
-                            {this.state.nome}
+                    <ScrollView >
+                    <ImageBackground source={{ uri: 'http://' + api + ':3000/imgs/ExibirFilmeBase2.png' }} style={styles.image} >
+                        <View style={[styles.viewImg]}>
+                            <Text style={[styles.titulo]}>
+                                {this.state.nome}
+                            </Text>
+                            <Image source={{ uri: 'http://' + api + ':3000/filmes/poster/' + this.state.foto }} style={[styles.img]} />
+                        </View>
+                        <View style={[styles.viewNome]}>
+                            {this._classificacao()}
+                            <Text style={[styles.duracao]}>
+                                Duração: {this.state.duracao} Min
                         </Text>
-                        <Image source={{ uri: 'http://' + api + ':3000/filmes/poster/' + this.state.foto }} style={[styles.img]} />
-                    </View>
-                    <View style={[styles.viewNome]}>
-                        {this._classificacao()}
-                        <Text style={[styles.duracao]}>
-                            Duração: {this.state.duracao} Min
-                        </Text>
-                    </View>
-                    <View>
-                        <Text style={[styles.sinopse]}>
-                            {this.state.sinopse}
-                        </Text>
-                        <Text style={[styles.nome]}>
-                            Gênero: {this.state.genero}
-                        </Text>
-                        <Text style={[styles.nome]}>
-                            Diretor: {this.state.diretor}
-                        </Text>
-                    </View>
-                    <View style={[styles.atualrating]} >
-                        <Text style={[styles.avaliacaoText]}>Avaliações:</Text>
-                        <Text style={[styles.avaliacao]}>{ratingAvaliacao}</Text>
-                        <Icon
-                            name='star' size={25} color='#000000' style={styles.IconStar} />
-                    </View>
-                    <View style={[styles.rating]}>
-                        <AirbnbRating
-                            count={5}
-                            reviews={["Muito ruim", "Ruim", "Okay", "Bom", "Espetacular"]}
-                            defaultRating={5}
-                            size={20}
-                            onFinishRating={this.ratingCompleted}
-                        />
-                    </View>
-                    <View>
-                        <TouchableHighlight
-                            onPress={() => {
-                                this.props.navigation.navigate('Trailer', {
-                                    trailler: this.state.trailler,
+                        </View>
+                        <View>
+                            <Text style={[styles.sinopse]}>
+                                {this.state.sinopse}
+                            </Text>
+                            <Text style={[styles.nome]}>
+                                Gênero: {this.state.genero}
+                            </Text>
+                            <Text style={[styles.nome]}>
+                                Diretor: {this.state.diretor}
+                            </Text>
+                        </View>
+                        <View style={[styles.atualrating]} >
+                            <Text style={[styles.avaliacaoText]}>Avaliações:</Text>
+                            <Text style={[styles.avaliacao]}>{ratingAvaliacao}</Text>
+                            <Icon
+                                name='star' size={25} color='#000000' style={styles.IconStar} />
+                        </View>
+                        <View style={[styles.rating]}>
+                            <AirbnbRating
+                                count={5}
+                                reviews={["Muito ruim", "Ruim", "Okay", "Bom", "Espetacular"]}
+                                defaultRating={5}
+                                size={20}
+                                onFinishRating={this.ratingCompleted}
+                            />
+                        </View>
+                        <View>
+                            <TouchableHighlight
+                                onPress={() => {
+                                    this.props.navigation.navigate('Trailer', {
+                                        trailler: this.state.trailler,
 
-                                });
-                            }}
-                            style={styles.btnClickContain}
-                            underlayColor='#FFFF00'>
-                            <View
-                                style={styles.btnContainer}>
-                                <Icon
-                                    name='movie'
-                                    size={25}
-                                    color='#000000'
-                                    style={styles.btnIcon} />
-                                <Text style={styles.btnText}>Trailer</Text>
-                            </View>
-                        </TouchableHighlight>
-                        <TouchableHighlight
-                            style={styles.btnClickContain}
-                            underlayColor='#FFFF00'>
-                            <View
-                                style={styles.btnContainer}>
-                                <Icon
-                                    name='local-activity'
-                                    size={25}
-                                    color='#000000'
-                                    style={styles.btnIcon} />
-                                <Text style={styles.btnText}>Comprar Ingresso</Text>
-                            </View>
-                        </TouchableHighlight>
-                    </View>
-                </ScrollView>
-
+                                    });
+                                }}
+                                style={styles.btnClickContain}
+                                underlayColor='#FFFF00'>
+                                <View
+                                    style={styles.btnContainer}>
+                                    <Icon
+                                        name='movie'
+                                        size={25}
+                                        color='#000000'
+                                        style={styles.btnIcon} />
+                                    <Text style={styles.btnText}>Trailer</Text>
+                                </View>
+                            </TouchableHighlight>
+                            <TouchableHighlight
+                                style={styles.btnClickContain}
+                                underlayColor='#FFFF00'>
+                                <View
+                                    style={styles.btnContainer}>
+                                    <Icon
+                                        name='local-activity'
+                                        size={25}
+                                        color='#000000'
+                                        style={styles.btnIcon} />
+                                    <Text style={styles.btnText}>Comprar Ingresso</Text>
+                                </View>
+                            </TouchableHighlight>
+                        </View>
+                        </ImageBackground>
+                    </ScrollView>
             </Container >
         );
     }
@@ -305,15 +306,16 @@ const styles = StyleSheet.create({
         backgroundColor: '#000000'
     },
     img: {
-        height: 240,
+        height: 300,
         width: 200,
         borderWidth: 1,
         borderRadius: 20,
-        borderColor: '#000000'
+        borderColor: 'white',
+        marginTop: '7%'
     },
     viewImg: {
         marginLeft: '2%',
-        marginTop: '5%',
+        marginTop: '7%',
         alignItems: 'center'
     },
     nome: {
@@ -353,16 +355,16 @@ const styles = StyleSheet.create({
     viewNome: {
         flexDirection: 'row',
         marginBottom: 2,
-        marginTop: 1
+        marginTop: 10
     },
     duracao: {
-        color: '#FFFFFF',
+        color: 'black',
         marginLeft: '10%'
     },
     sinopse: {
         lineHeight: 19,
         color: '#FFFFFF',
-        marginTop: 7
+        marginTop: 50
     },
     titulo: {
         fontWeight: 'bold',
@@ -442,6 +444,11 @@ const styles = StyleSheet.create({
     },
     rating: {
         marginBottom: 10
+    },
+    image: {
+        flex: 1,
+        resizeMode: "cover",
+        justifyContent: "center",
     }
 
 })
