@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Container, Header, Item, Input, Button, Text, Thumbnail } from 'native-base';
 import { StyleSheet, ToastAndroid, FlatList, View, TouchableHighlight, Image,AsyncStorage } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import LottieView from 'lottie-react-native';
 import ip from '../components/ip';
 export default class Amigos extends Component {
     constructor(props) {

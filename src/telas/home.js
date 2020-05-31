@@ -227,9 +227,9 @@ export default class Home extends React.Component {
               return <Card style={styles.card} >
                 <CardItem style={styles.card} >
                   <Left>
-                    <Thumbnail source={{ uri: 'http://' + this.state.api + ':3000/fotoperfil/cinr.jpg' }} />
+                    <Thumbnail source={{ uri: 'http://' + this.state.api + ':3000/fotoperfil/'+ item.fotoUser }} />
                     <Body>
-                      <Text style={{ fontWeight: 'bold', color: "#fff" }}>Cinemark</Text>
+                      <Text style={{ fontWeight: 'bold', color: "#fff" }}>{item.nomeFantasia}</Text>
                       <Text style={{ color: "#fff" }} note>{item.note}</Text>
                     </Body>
                   </Left>

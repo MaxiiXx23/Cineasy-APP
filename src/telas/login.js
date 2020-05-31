@@ -52,11 +52,11 @@ export default class login extends React.Component {
             ToastAndroid.CENTER,
           );
         });
-        ToastAndroid.showWithGravity(
-          'Nova senha enviada para o email: '+email,
-          ToastAndroid.LONG,
-          ToastAndroid.CENTER,
-        );
+      ToastAndroid.showWithGravity(
+        'Nova senha enviada para o email: ' + email,
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER,
+      );
     }
 
   }
@@ -101,17 +101,14 @@ export default class login extends React.Component {
               ToastAndroid.LONG,
               ToastAndroid.CENTER,
             );
+          } else {
+            let result = responseJson.token;
+            this.setState({ Token: result });
+            this.setState({ idUsuario: responseJson.id })
+            AsyncStorage.multiSet([['userToken', JSON.stringify(responseJson.token)], ['idUsuario', JSON.stringify(responseJson.id)]]);
+            this.props.navigation.navigate('App');
           }
-          // colocar esse bloco dentro de um else kkkk
-          let result = responseJson.token;
-          //console.log(responseJson.id)
-          this.setState({ Token: result });
-          this.setState({ idUsuario: responseJson.id })
-          //console.log(result)
-          //console.log(responseJson.id);
-          AsyncStorage.multiSet([['userToken', JSON.stringify(responseJson.token)], ['idUsuario', JSON.stringify(responseJson.id)]]);
         })
-      this.props.navigation.navigate('App');
     }
   }
   _MudaIcon() {
