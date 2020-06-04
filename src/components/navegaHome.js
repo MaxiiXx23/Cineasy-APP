@@ -7,10 +7,24 @@ import Home from '../telas/home';
 import Comentario from './comentario';
 import Modaloptions from './modaloptions';
 import Updatecomentario from './updatecomentario';
+import Perfilempresa from '../telasperfil/perfilempresa';
+import Postimagem from '../components/postimagem';
 
 const NevegaHome = createStackNavigator({
     Home: {
         screen: Home,
+        navigationOptions: {
+            headerShown: false,
+        },
+    },
+    PerfilEmpresa:{
+        screen: Perfilempresa,
+        navigationOptions: {
+            headerShown: false,
+        },
+    },
+    Postagem:{
+        screen: Postimagem,
         navigationOptions: {
             headerShown: false,
         },

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, FlatList,Image} from 'react-native';
+import { View, StyleSheet, FlatList, Image, ToastAndroid, AsyncStorage, TouchableWithoutFeedback } from 'react-native';
 import { Container, Text, Header, Left, Body, Button, Title, Thumbnail, Content } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ip from '../components/ip';
@@ -7,86 +7,241 @@ export default class Perfilempresa extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            isLoading: true,
+            DadosEmpresa: [],
+            NomeFantasia: '',
+            fotoUser: '',
+            statusSeguir: '',
+            id_seguir: '',
+            totalposts:'',
+            totalsegui:''
         };
     }
+    async componentDidMount() {
+        this.willBlurListener = this.props.navigation.addListener('willFocus', () => {
+            this.loadRepositories();
+            this._totalposts();
+            this._totalsegui();
+            this._verificaSeguir();
+        })
+
+    }
+    async componentWillUnmount() {
+        this.willBlurListener.remove();
+    }
+    loadRepositories = async () => {
+        const { navigation } = this.props;
+        const idEmpresa = navigation.getParam('itemId', 'NO-ID');
+        const api = ip;
+        return fetch('http://' + api + ':3000/posts/postempresa/' + idEmpresa + '/4')
+            .then((response) => response.json())
+            .then((responseJson) => {
+                this.setState({
+                    isLoading: false,
+                    DadosEmpresa: responseJson,
+                    NomeFantasia: responseJson[0].nomeFantasia,
+                    fotoUser: responseJson[0].fotoUser,
+                    frase: responseJson[0].frase
+                });
+            })
+            .catch((error) => {
+                ToastAndroid.showWithGravity(
+                    'Falha na conexão.',
+                    ToastAndroid.LONG,
+                    ToastAndroid.CENTER,
+                );
+            });
+    }
+    _totalposts = async () => {
+        const { navigation } = this.props;
+        const idEmpresa = navigation.getParam('itemId', 'NO-ID');
+        const api = ip;
+        return fetch('http://' + api + ':3000/posts/totalposts/' + idEmpresa)
+            .then((response) => response.json())
+            .then((responseJson) => {
+                this.setState({
+                    totalposts: responseJson.totalposts
+                });
+            })
+            .catch((error) => {
+                ToastAndroid.showWithGravity(
+                    'Falha na conexão.',
+                    ToastAndroid.LONG,
+                    ToastAndroid.CENTER,
+                );
+            });
+    }
+    _totalsegui = async () => {
+        const { navigation } = this.props;
+        const idEmpresa = navigation.getParam('itemId', 'NO-ID');
+        const api = ip;
+        return fetch('http://' + api + ':3000/empresa/totalseguidores/' + idEmpresa)
+            .then((response) => response.json())
+            .then((responseJson) => {
+                console.log(responseJson)
+                this.setState({
+                    totalsegui: responseJson.totalseguidores
+                });
+            })
+            .catch((error) => {
+                ToastAndroid.showWithGravity(
+                    'Falha na conexão.',
+                    ToastAndroid.LONG,
+                    ToastAndroid.CENTER,
+                );
+            });
+    }
+    _verificaSeguir = async () => {
+        const { navigation } = this.props;
+        const idUserLogado = await AsyncStorage.getItem('idUsuario');
+        const idEmpresa = navigation.getParam('itemId', 'NO-ID');
+        const api = ip;
+        return fetch('http://' + api + ':3000/empresa/verificaseguir/' + idEmpresa + '/' + idUserLogado)
+            .then((response) => response.json())
+            .then((responseJson) => {
+                const dadosSeguir = responseJson
+                if (dadosSeguir.mensagem == '1') {
+                    this.setState({
+                        statusSeguir: '1',
+                        id_seguir: dadosSeguir.id_seguir
+                    })
+                } else if (dadosSeguir.mensagem == '0') {
+                    this.setState({
+                        statusSeguir: '0'
+                    })
+                }
+            })
+            .catch((error) => {
+                ToastAndroid.showWithGravity(
+                    'Falha na conexão.',
+                    ToastAndroid.LONG,
+                    ToastAndroid.CENTER,
+                );
+            });
+
+    }
+    _retornaBtn() {
+        const verificaSeguir = this.state.statusSeguir
+        if (verificaSeguir == '0') {
+            return (
+                <Button style={styles.btnSeguir} onPress={this._Seguir} rounded success>
+                    <Text style={styles.btnText}>Seguir</Text>
+                </Button>
+            )
+        } else {
+            return (
+                <Button style={styles.btnSeguir} onPress={this._naoSeguir} rounded success>
+                    <Text style={styles.btnText2}>Deixar de Seguir</Text>
+                </Button>
+            )
+        }
+    }
+    _Seguir = async () => {
+        const { navigation } = this.props;
+        const idUserLogado = await AsyncStorage.getItem('idUsuario');
+        const idEmpresa = navigation.getParam('itemId', 'NO-ID');
+        const api = ip;
+        fetch('http://' + api + ':3000/empresa/seguir/' + idUserLogado, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                idSolicitado: idEmpresa
+            }),
+        }).then((response) => response.json())
+            .then((responseJson) => {
+                const mensagem = responseJson.mensagem
+                if (mensagem == '1') {
+                    this._totalsegui();
+                    this._verificaSeguir();
+                }
+            }).catch((error) => {
+                console.error(error);
+                ToastAndroid.showWithGravity(
+                    'Falha na conexão.',
+                    ToastAndroid.LONG,
+                    ToastAndroid.CENTER,
+                );
+            });
+    }
+    _naoSeguir = async () => {
+        const id_seguir = this.state.id_seguir;
+        const api = ip;
+        fetch('http://' + api + ':3000/empresa/excluirseguir/' + id_seguir, {
+            method: 'DELETE',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then((response) => response.json()).then((responseJson) => {
+            if (responseJson.mensagem == '1') {
+                ToastAndroid.showWithGravity(
+                    'Deixou de seguir.',
+                    ToastAndroid.LONG,
+                    ToastAndroid.CENTER,
+                );
+                this._totalsegui();
+                this._verificaSeguir();
+            }
+        }).catch((error) => {
+            console.error(error);
+            ToastAndroid.showWithGravity(
+                'Falha na conexão.',
+                ToastAndroid.LONG,
+                ToastAndroid.CENTER,
+            );
+        });
+    }
     render() {
-        DATA = [
-            {
-                id: '1',
-                img: 'https://img.freepik.com/fotos-gratis/arvore-3d-contra-um-ceu-do-por-do-sol_1048-9754.jpg?size=626&ext=jpg',
-            },
-            {
-                id: '2',
-                img: 'https://img.freepik.com/fotos-gratis/arvore-3d-contra-um-ceu-do-por-do-sol_1048-9754.jpg?size=626&ext=jpg',
-            },
-            {
-                id: '3',
-                img: 'https://img.freepik.com/fotos-gratis/arvore-3d-contra-um-ceu-do-por-do-sol_1048-9754.jpg?size=626&ext=jpg',
-            },
-            {
-                id: '4',
-                img: 'https://img.freepik.com/fotos-gratis/arvore-3d-contra-um-ceu-do-por-do-sol_1048-9754.jpg?size=626&ext=jpg',
-            },
-            {
-                id: '5',
-                img: 'https://img.freepik.com/fotos-gratis/arvore-3d-contra-um-ceu-do-por-do-sol_1048-9754.jpg?size=626&ext=jpg',
-            },
-            {
-                id: '6',
-                img: 'https://img.freepik.com/fotos-gratis/arvore-3d-contra-um-ceu-do-por-do-sol_1048-9754.jpg?size=626&ext=jpg',
-            },
-            {
-                id: '7',
-                img: 'https://img.freepik.com/fotos-gratis/arvore-3d-contra-um-ceu-do-por-do-sol_1048-9754.jpg?size=626&ext=jpg',
-            },
-            {
-                id: '8',
-                img: 'https://img.freepik.com/fotos-gratis/arvore-3d-contra-um-ceu-do-por-do-sol_1048-9754.jpg?size=626&ext=jpg',
-            },
-        ];
         const api = ip;
         return (
             <Container style={styles.Container}>
                 <Header androidStatusBarColor="#191919" style={styles.header}>
                     <Left>
                         <Button transparent>
-                            <Icon name='arrow-back' size={25} color='white' />
+                            <Icon name='arrow-back' size={25} color='white' onPress={() => this.props.navigation.goBack()} />
                         </Button>
                     </Left>
                     <Body>
-                        <Title>Cinemark</Title>
+                        <Title>{this.state.NomeFantasia}</Title>
                     </Body>
                 </Header>
                 <Content >
                     <View style={styles.ContainerInfos}>
-                        <Thumbnail large source={{ uri: 'http://' + api + ':3000/fotoperfil/cinr.jpg' }} />
+                        <Thumbnail large source={{ uri: 'http://' + api + ':3000/fotoperfil/' + this.state.fotoUser }} />
                         <View>
-                            <Text style={styles.numberinfo}>155</Text>
+                        <Text style={styles.numberinfo}>{this.state.totalposts}</Text>
                             <Text style={styles.descinfo}>Publicações</Text>
                         </View>
                         <View>
-                            <Text style={styles.numberinfo2}>20k</Text>
+                        <Text style={styles.numberinfo2}>{this.state.totalsegui}</Text>
                             <Text style={styles.descinfo2}>Seguidores</Text>
                         </View>
                     </View>
                     <View style={styles.describeText}>
-                        <Text style={styles.nome}>Cinemark Brasil</Text>
-                        <Text style={styles.TextInfo}>É mais que cinema.É Cinemark.</Text>
+                        <Text style={styles.nome}>{this.state.NomeFantasia}</Text>
+                        <Text style={styles.TextInfo}>{this.state.frase}</Text>
                     </View>
-                    <Button style={styles.btnSeguir} rounded success>
-                        <Text style={styles.btnText}>Seguir</Text>
-                    </Button>
+                    {this._retornaBtn()}
                     <View style={styles.ContainerPubli}>
                         <Icon style={styles.IconPubli} name='view-module' size={25} color='white' />
                         <FlatList
-                            data={DATA}
+                            data={this.state.DadosEmpresa}
                             numColumns={2}
-                            renderItem={({ item }) => <Image
-                            style={styles.Img}
-                            source={{
-                              uri: item.img,
-                            }}
-                          />}
+                            renderItem={({ item }) => <TouchableWithoutFeedback 
+                            onPress={() => this.props.navigation.navigate('Postagem', {
+                                itemId: item.id_post
+                                })}>
+                                <Image
+                                    style={styles.Img}
+                                    source={{
+                                        uri: 'http://' + api + ':3000/posts/' + item.img_post,
+                                    }}
+                                />
+                            </TouchableWithoutFeedback>
+                            }
                             keyExtractor={item => item.id}
                         />
                     </View>
@@ -136,6 +291,9 @@ const styles = StyleSheet.create({
     btnText: {
         marginLeft: '48%'
     },
+    btnText2: {
+        marginLeft: '38%'
+    },
     describeText: {
         marginTop: 10,
         marginLeft: 12
@@ -157,10 +315,10 @@ const styles = StyleSheet.create({
     IconPubli: {
         marginLeft: '48%'
     },
-    Img:{
+    Img: {
         width: 200,
         height: 200,
-        marginRight:1,
-        marginLeft:2
+        marginRight: 1,
+        marginLeft: 2
     }
 });

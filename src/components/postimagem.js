@@ -1,52 +1,93 @@
-import React,{Component}from 'react';
-import { FlatList, Image, ActivityIndicator, Text, View, Dimensions, TouchableHighlight, TouchableWithoutFeedback, StyleSheet, ToastAndroid } from 'react-native';
-import { Container, Header, Content, Card, CardItem, Button, Thumbnail, Left, Body, Right } from 'native-base';
-
+import React, { Component } from 'react';
+import { ScrollView, View, Image, StyleSheet, ToastAndroid } from 'react-native';
+import { Container, Header, Button, Left, Body, Title, Text } from 'native-base';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import GallerySwiper from "react-native-gallery-swiper";
+import ip from '../components/ip'
 export default class Postimagem extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-        };
-    }
-
-    render() {
-        return (
-            <View></View>
+  constructor(props) {
+    super(props);
+    this.state = {
+      NomeFantasia: 'Cinepólis',
+      note: '',
+      img_post: 'fundoblack.jpg',
+      tipo_file: '',
+      data_post: ''
+    };
+  }
+  async componentDidMount() {
+    this.willBlurListener = this.props.navigation.addListener('willFocus', () => {
+      this.loadRepositories();
+    })
+  }
+  async componentWillUnmount() {
+    this.willBlurListener.remove();
+  }
+  loadRepositories = async () => {
+    const { navigation } = this.props;
+    const id_post = navigation.getParam('itemId', 'NO-ID');
+    const api = ip;
+    return fetch('http://' + api + ':3000/posts/post/' + id_post)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log(responseJson[0].img_post)
+        this.setState({
+          note: responseJson[0].note,
+          img_post: responseJson[0].img_post,
+          tipo_file: responseJson[0].tipo_file,
+          data_post: responseJson[0].data_post,
+          qntLikes: responseJson[0].qntLikes
+        });
+      })
+      .catch((error) => {
+        ToastAndroid.showWithGravity(
+          'Falha na conexão.',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
         );
-    }
+      });
+  }
+  render() {
+    const api = ip
+    return (
+      <Container>
+        <Header androidStatusBarColor="#191919" style={styles.header}>
+          <Left>
+            <Button transparent>
+              <Icon name='arrow-back' size={25} color='white' onPress={() => this.props.navigation.goBack()} />
+            </Button>
+          </Left>
+          <Body>
+            <Title>{this.state.NomeFantasia}</Title>
+          </Body>
+        </Header>
+        <GallerySwiper
+          images={[
+            { uri: "http://" + api + ":3000/posts/"+this.state.img_post },
+
+          ]}
+        />
+        <Text style={styles.Describe}>{this.state.note}</Text>
+        <Text style={styles.Data}>{this.state.data_post}</Text>
+      </Container>
+    );
+  }
 }
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      backgroundColor: '#000000'
-    },
-    card: {
-      borderRadius: 20,
-      backgroundColor: "#303030",
-      borderColor: "#303030"
-    },
-    btnLike: {
-      height: 40,
-      width: 60
-    },
-    btnContainer: {
-      flex: 1,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'stretch',
-      alignSelf: 'stretch',
-      borderRadius: 2,
-    },
-    btnIcon: {
-      height: 50,
-      width: 35,
-      marginTop: 5
-    },
-    btnIcon2: {
-      height: 50,
-      width: 35,
-      marginTop: 23
-  
-    }
-  })
+  Container: {
+    backgroundColor: "#303030",
+  },
+  header: {
+    backgroundColor: "#303030",
+  },
+  Describe: {
+    backgroundColor: 'black',
+    color: 'white'
+  },
+  Data: {
+    backgroundColor: 'black',
+    color: 'white',
+    fontSize:10,
+    fontWeight:'200'
+  }
+})

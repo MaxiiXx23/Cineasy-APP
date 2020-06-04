@@ -93,7 +93,7 @@ export default class Perfil extends Component {
               </Row>
               <Row size={100}>
                 <Col style={perfil2.bloco}>
-                  <Icon name="star" size={80} style={perfil2.icons} />
+                  <Icon name="star" size={80} style={perfil2.icons} onPress={() => this.props.navigation.navigate('abaSeguindo')} />
                   <Text style={perfil2.text}>Seguindo</Text>
                 </Col>
                 <Col style={perfil2.bloco1}>
