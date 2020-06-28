@@ -28,7 +28,7 @@ export default class cadastro extends Component {
   }
   _login = async () => {
     const api = ip;
-    fetch('http://' + api + ':3000/usuarios/login', {
+    fetch(api +'/usuarios/login', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -109,7 +109,7 @@ export default class cadastro extends Component {
       const secondPart = explode3[1]
       const PhoneValidado = 55 + dd + firstPart + secondPart
       const api = ip
-      fetch(`http://${api}:3000/usuarios/`, {
+      fetch(`${api}/usuarios/`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',

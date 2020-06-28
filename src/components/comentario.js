@@ -36,7 +36,7 @@ export default class Comentario extends Component {
         const { navigation } = this.props;
         const idPost = navigation.getParam('itemId', 'NO-ID');
         const api = ip;
-        return fetch(`http://${api}:3000/comentarios/ver/${idPost}/${page}`)
+        return fetch(`${api}/comentarios/ver/${idPost}/${page}`)
             .then((response) => response.json())
             .then((responseJson) => {
                 this.setState({
@@ -88,7 +88,7 @@ export default class Comentario extends Component {
                 ToastAndroid.CENTER,
             );
         } else {
-            fetch(`http://${api}:3000/comentarios/comentar/`, {
+            fetch(`${api}/comentarios/comentar/`, {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -100,7 +100,7 @@ export default class Comentario extends Component {
                     comentario: this.state.TextInputComentar
                 }),
             });
-            fetch(`http://${api}:3000/posts/qntcoment/`, {
+            fetch(`${api}/posts/qntcoment/`, {
                 method: 'PUT',
                 headers: {
                     Accept: 'application/json',
@@ -133,7 +133,7 @@ export default class Comentario extends Component {
                             <View>
                                 <Thumbnail
                                     source={{
-                                        uri: 'http://' + api + ':3000/imgs/avatarperfil.png'
+                                        uri: api + '/imgs/avatarperfil.png'
                                     }}
                                 />
                             </View>
@@ -154,7 +154,7 @@ export default class Comentario extends Component {
                             <View>
                                 <Thumbnail
                                     source={{
-                                        uri: 'http://' + api + ':3000/fotoperfil/'+item.fotouser
+                                        uri: api + '/fotoperfil/'+item.fotouser
                                     }}
                                 />
                             </View>

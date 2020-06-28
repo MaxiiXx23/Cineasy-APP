@@ -20,7 +20,7 @@ export default class Seguindo extends Component {
     _listSeguindo = async () => {
         const id = await AsyncStorage.getItem('idUsuario');
         const api = ip;
-        return fetch(`http://${api}:3000/empresa/listarseguindo/${id}`)
+        return fetch(`${api}/empresa/listarseguindo/${id}`)
             .then((response) => response.json())
             .then((responseJson) => {
                 console.log(responseJson)
@@ -46,7 +46,7 @@ export default class Seguindo extends Component {
         let nome = this.state.TextInputSearch
         const api = ip;
         if (!nome == "") {
-            return fetch(`http://${api}:3000/empresa/buscarredes/${nome}`)
+            return fetch(`${api}/empresa/buscarredes/${nome}`)
                 .then((response) => response.json())
                 .then((responseJson) => {
                     console.log(responseJson)
@@ -97,7 +97,7 @@ export default class Seguindo extends Component {
                                     }}
                                 >
                                     <View style={styles.itemList}>
-                                        <Thumbnail small source={{ uri: 'http://' + api + ':3000/fotoperfil/' + item.fotoUser }} />
+                                        <Thumbnail small source={{ uri: api + '/fotoperfil/' + item.fotoUser }} />
                                         <Text style={styles.itemText} >{item.nomeFantasia}</Text>
                                     </View>
                                 </TouchableHighlight>
@@ -118,7 +118,7 @@ export default class Seguindo extends Component {
                                     }}
                                 >
                                     <View style={styles.itemList}>
-                                        <Thumbnail small source={{ uri: 'http://' + api + ':3000/fotoperfil/' + item.fotouser }} />
+                                        <Thumbnail small source={{ uri: api + '/fotoperfil/' + item.fotouser }} />
                                         <Text style={styles.itemText} >{item.nomeFantasia}</Text>
                                     </View>
                                 </TouchableHighlight>

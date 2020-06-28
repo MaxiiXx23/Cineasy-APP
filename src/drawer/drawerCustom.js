@@ -26,7 +26,7 @@ export default class drawerCustom extends Component {
         const id = await AsyncStorage.getItem('idUsuario');
         //console.log(id)
         const api = ip;
-        return fetch('http://' + api + ':3000/usuarios/dados/' + id)
+        return fetch(api + '/usuarios/dados/' + id)
             .then((response) => response.json())
             .then((responseJson) => {
                 this.setState({
@@ -72,7 +72,7 @@ export default class drawerCustom extends Component {
             <Container style={{ backgroundColor: '#000000' }}>
                 <View style={styles.ViewFoto}>
                     <Icon name="arrow-back" size={20} style={{ color: '#ffffff' }} onPress={this._voltar('Perfil')} />
-                    <Thumbnail source={{ uri: 'http://' + api + ':3000/fotoperfil/' + this.state.fotoUser }} style={styles.perfil} />
+                    <Thumbnail source={{ uri: api + '/fotoperfil/' + this.state.fotoUser }} style={styles.perfil} />
                 </View>
                 <View>
                     <Text style={styles.config}>

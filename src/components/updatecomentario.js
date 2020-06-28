@@ -31,7 +31,7 @@ export default class Updatecomentario extends Component {
                 ToastAndroid.CENTER,
             );
         } else {
-            fetch(`http://${api}:3000/comentarios/update`, {
+            fetch(`${api}/comentarios/update`, {
                 method: 'PUT',
                 headers: {
                     Accept: 'application/json',

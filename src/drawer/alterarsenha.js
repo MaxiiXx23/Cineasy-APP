@@ -32,7 +32,7 @@ export default class AlternarSenha extends Component {
                 ToastAndroid.CENTER,
             );
         } else {
-            fetch(`http://${api}:3000/usuarios/editapass`, {
+            fetch(`${api}/usuarios/editapass`, {
                 method: 'PUT',
                 headers: {
                     Accept: 'application/json',

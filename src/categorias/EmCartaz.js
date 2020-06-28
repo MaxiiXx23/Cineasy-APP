@@ -22,7 +22,7 @@ class EmCartaz extends React.Component {
         if (this.state.loading) return;
         const { page } = this.state;
         const api = ip;
-        return fetch(`http://${api}:3000/filmes/listaemcartaz/${page}`)
+        return fetch(`${api}/filmes/listaemcartaz/${page}`)
             .then((response) => response.json())
             .then((responseJson) => {
                 this.setState({
@@ -78,7 +78,7 @@ class EmCartaz extends React.Component {
                         }}>
                             <View style={{ backgroundColor: '#191919', height: 240, borderColor: 'transparent',marginBottom:5 }} >
                                 <View style={{ backgroundColor: '#191919', height: 250, marginLeft: 5}} >
-                                    <Image source={{ uri:'http://' + api + ':3000/filmes/poster/' + item.foto }} style={{ height: 240, width: 200 }} /></View>
+                                    <Image source={{ uri: api + ':3000/filmes/poster/' + item.foto }} style={{ height: 240, width: 200 }} /></View>
                             </View>
                         </TouchableHighlight>
                     }

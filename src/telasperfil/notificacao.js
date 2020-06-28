@@ -21,7 +21,7 @@ export default class Notificacao extends Component {
     _loadPendentes = async () => {
         const id = await AsyncStorage.getItem('idUsuario');
         const api = ip;
-        return fetch(`http://${api}:3000/usuarios/listarpendentes/${id}`)
+        return fetch(`${api}/usuarios/listarpendentes/${id}`)
             .then((response) => response.json())
             .then((responseJson) => {
                 console.log(responseJson)
@@ -60,7 +60,7 @@ export default class Notificacao extends Component {
                             }}
                         >
                             <View style={styles.itemList}>
-                                <Thumbnail small source={{ uri: 'http://' + api + ':3000/fotoperfil/' + item.fotoUser }} />
+                                <Thumbnail small source={{ uri: api + '/fotoperfil/' + item.fotoUser }} />
                                 <Text style={styles.Text}>{item.nome}</Text>
                             </View>
                         </TouchableHighlight>

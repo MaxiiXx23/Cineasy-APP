@@ -31,7 +31,7 @@ export default class login extends React.Component {
     } else {
       const api = ip;
       const email = this.state.TextInputEmail
-      fetch(`http://${api}:3000/usuarios/updatepass`, {
+      fetch(`${api}/usuarios/updatepass`, {
         method: 'PUT',
         headers: {
           Accept: 'application/json',
@@ -82,7 +82,7 @@ export default class login extends React.Component {
       );
     } else {
       const api = ip;
-      fetch('http://' + api + ':3000/usuarios/login', {
+      fetch( api + '/usuarios/login', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -121,38 +121,35 @@ export default class login extends React.Component {
 
     return (
       <>
-        <StatusBar backgroundColor="black" barStyle="dark-content" />
-        <ImageBackground source={require('../assets/LoginDarkBasePng.png')} style={{ width: '100%', height: '100%' }}>
+        <StatusBar backgroundColor="black" barStyle="light-content" />
+        <ImageBackground source={require('../assets/LoginDarkBasePng.png')} style={{ flex: 1 }}>
           <KeyboardAvoidingView style={styles.ContainerLogar}>
             <View style={styles.ContainerImg}>
             </View>
             <View style={
               styles.ContainerInputs}>
-              <View style={styles.searchSection}>
-                <Icon name="person" size={30} color="#FFD700" />
-                <TextInput style={styles.Inputs} keyboardType='email-address'
-                  placeholder="E-mail:"
-                  onChangeText={TextInputEmail => this.setState({ TextInputEmail })}
-                />
+              <TextInput style={styles.Inputs} keyboardType='email-address'
+                placeholder="Email"
+                onChangeText={TextInputEmail => this.setState({ TextInputEmail })}
+                placeholderTextColor="black"
+              />
+              <TextInput style={styles.Inputs} secureTextEntry={true}
+                placeholder="Senha"
+                onChangeText={TextInputSenha => this.setState({ TextInputSenha })}
+                placeholderTextColor="black"
+              />
+              <View style={styles.ContainerEsqueceu}>
+                <Text style={styles.Esqueceu} onPress={this._recupera}>Esqueceu sua senha?</Text>
               </View>
-              <View style={
-                styles.searchSection}>
-                <Icon name="lock" size={30} color="#FFD700" />
-                <TextInput style={styles.Inputs} secureTextEntry={true}
-                  placeholder="Senha:"
-                  onChangeText={TextInputSenha => this.setState({ TextInputSenha })}
-                />
-              </View>
-              <Text style={styles.Esqueceu} onPress={this._recupera}>Esqueceu sua senha?</Text>
               <TouchableOpacity style={styles.BtnLogar} onPress={this.InsertDataToServer}>
                 <Text style={styles.SubmitText}>
                   Entrar
-                </Text>
+              </Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.BtnCadastrar} onPress={this._signInAsync} >
                 <Text style={styles.SubmitText2} >
-                  Cadastrar-se
-                </Text>
+                  Não tem uma conta ? Cadastra-se
+              </Text>
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
@@ -186,14 +183,13 @@ const styles = StyleSheet.create({
     width: '90%'
   },
   Inputs: {
-    backgroundColor: '#303030',
-    borderBottomWidth: 1,
-    borderBottomColor: '#303030',
+    backgroundColor: '#fff',
+    borderColor: '#000',
     width: '90%',
-    marginBottom: 15,
-    color: '#fff',
+    marginTop: 15,
+    color: '#000',
     fontSize: 17,
-    borderRadius: 7,
+    borderRadius: 4,
     padding: 10
   },
   Slogan: {
@@ -209,7 +205,7 @@ const styles = StyleSheet.create({
     height: 45,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 7,
+    borderRadius: 4,
     padding: 2
   },
   SubmitText: {
@@ -228,15 +224,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
 
   },
-  Esqueceu: {
-    color: '#FFD700',
-    marginBottom: 7,
-    marginLeft: '45%'
-
+  ContainerEsqueceu: {
+    width: '90%',
+    display: 'flex',
   },
-  searchSection: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+  Esqueceu: {
+    color: '#fff',
+    marginTop: 5,
+    marginBottom: 15,
+    textAlign: "right"
   }
 });

@@ -3,7 +3,6 @@ import { StyleSheet, Text, ImageBackground, View, TouchableHighlight, Image, Toa
 import { Container, Thumbnail, Label, Content, Form, Item, Input } from 'native-base';
 import ip from '../components/ip';
 import ImagePicker from 'react-native-image-picker';
-import { TextInputMask } from 'react-native-masked-text';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 export default class EditarPerfil extends React.Component {
   static navigationOptions = {
@@ -17,7 +16,7 @@ export default class EditarPerfil extends React.Component {
       value: '',
       international: '',
       text: '',
-      uriCelular: 'https://i1.wp.com/animasso.com.br/wp-content/uploads/2018/05/saitama-ok-aficionados-0.jpg?resize=600%2C384'
+      uriCelular: ''
     };
   }
   // component para puxar os dados ao entrar na tela
@@ -27,9 +26,8 @@ export default class EditarPerfil extends React.Component {
   //loadDados 
   _loadDados = async () => {
     const id = await AsyncStorage.getItem('idUsuario');
-    //console.log(id)
     const api = ip;
-    return fetch('http://' + api + ':3000/usuarios/dados/' + id)
+    return fetch(api + '/usuarios/dados/' + id)
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
@@ -39,13 +37,9 @@ export default class EditarPerfil extends React.Component {
           capaUser: responseJson[0].capaUser,
           telefone: responseJson[0].telefone
 
-        }, function () {
-
         });
-        //console.log(this.state.dataSource[0].nome)
       })
       .catch((error) => {
-        //console.error(error);
         ToastAndroid.showWithGravity(
           'Falha na conexão.',
           ToastAndroid.LONG,
@@ -75,10 +69,9 @@ export default class EditarPerfil extends React.Component {
   
         }),
       };
-      fetch('http://' + api + ':3000/usuarios/editadados/' + id,config)
+      fetch( api + '/usuarios/editadados/' + id,config)
       .then((response) => response.json())
       .then((responseJson) => {
-        //console.log(responseJson);
         if (responseJson.mensagem == 'Ok') {
           ToastAndroid.showWithGravity(
             'Dados Atualizados com sucesso.',
@@ -138,8 +131,6 @@ export default class EditarPerfil extends React.Component {
       },
     };
     ImagePicker.showImagePicker(options, response => {
-
-
       if (response.didCancel) {
 
       } else if (response.error) {
@@ -153,7 +144,6 @@ export default class EditarPerfil extends React.Component {
           uriCelular: source.uri
         });
         this._uploadCapa();
-        //console.log(this.state.filePath)
       }
     });
 
@@ -175,9 +165,8 @@ export default class EditarPerfil extends React.Component {
         'Content-Type': 'multipart/form-data',
       },
       body: data,
-
     };
-    fetch('http://' + api + ':3000/usuarios/uploadcapa/' + id, config)
+    fetch(api + '/usuarios/uploadcapa/' + id, config)
       .then((response) => response.json())
       .then((responseJson) => {
         //console.log(responseJson);
@@ -228,7 +217,6 @@ export default class EditarPerfil extends React.Component {
           uriCelular: source.uri
         });
         this._uploadImg();
-        //console.log(this.state.filePath)
       }
     });
 
@@ -253,14 +241,14 @@ export default class EditarPerfil extends React.Component {
       body: data,
 
     };
-    fetch('http://' + api + ':3000/usuarios/uploadperfil/' + id, config)
+    fetch(api + '/usuarios/uploadperfil/' + id, config)
       .then((response) => response.json())
       .then((responseJson) => {
         //console.log(responseJson);
         if (responseJson.mensagem == 'Ok') {
           this._loadDados();
           ToastAndroid.showWithGravity(
-            'Uplaod efetuado com sucesso',
+            'Upload efetuado com sucesso',
             ToastAndroid.LONG,
             ToastAndroid.CENTER,
           );
@@ -271,7 +259,6 @@ export default class EditarPerfil extends React.Component {
             ToastAndroid.CENTER,
           );
         }
-        //console.log(this.state.Token);
       })
 
   }
@@ -282,11 +269,11 @@ export default class EditarPerfil extends React.Component {
         <KeyboardAvoidingView style={styles.container}>
           <View>
             <View>
-              <ImageBackground source={{ uri: 'http://' + api + ':3000/fotoperfil/' + this.state.capaUser }} style={styles.capa}>
+              <ImageBackground source={{ uri: api + '/fotoperfil/' + this.state.capaUser }} style={styles.capa}>
                 <Icon name="camera-alt" size={30} style={styles.icons2} onPress={this._Escolhecapa} />
               </ImageBackground>
             </View>
-            <Thumbnail large source={{ uri: 'http://' + api + ':3000/fotoperfil/' + this.state.fotoUser }} style={styles.img} />
+            <Thumbnail large source={{ uri: api + '/fotoperfil/' + this.state.fotoUser }} style={styles.img} />
             <Icon name="camera-alt" size={30} style={styles.icons} onPress={this._EscolheImg} />
           </View>
           <ScrollView style={styles.lista}>

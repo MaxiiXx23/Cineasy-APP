@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ImageBackground, TouchableHighlight, Image, StyleSheet, ScrollView, AsyncStorage, ToastAndroid } from 'react-native';
-import { Container, Header, Content, Card, CardItem, Body } from 'native-base';
+import { Container } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Rating, AirbnbRating } from 'react-native-ratings';
 import ip from '../components/ip';
@@ -37,7 +37,7 @@ export default class Detalhes extends React.Component {
         })
         const api = ip;
         this._totalRating();
-        return fetch('http://' + api + ':3000/filmes/detalhes/' + idFilme)
+        return fetch(api + '/filmes/detalhes/' + idFilme)
             .then((response) => response.json())
             .then((responseJson) => {
                 this.setState({
@@ -67,28 +67,28 @@ export default class Detalhes extends React.Component {
     }
     _classificacao() {
         if (this.state.classf == 'L') {
-            return <View style={[styles.livre]}>
-                <Text style={[styles.colorClass]}> L </Text>
+            return <View style={styles.livre}>
+                <Text style={styles.colorClass}> L </Text>
             </View>;
         } else if (this.state.classf == '10') {
-            return <View style={[styles.class10]}>
-                <Text style={[styles.colorClass]}> 10 </Text>
+            return <View style={styles.class10}>
+                <Text style={styles.colorClass}> 10 </Text>
             </View>;
         } else if (this.state.classf == '12') {
-            return <View style={[styles.class12]}>
-                <Text style={[styles.colorClass]}> 12 </Text>
+            return <View style={styles.class12}>
+                <Text style={styles.colorClass}> 12 </Text>
             </View>;
         } else if (this.state.classf == '14') {
-            return <View style={[styles.class14]}>
-                <Text style={[styles.colorClass]}> 14 </Text>
+            return <View style={styles.class14}>
+                <Text style={styles.colorClass}> 14 </Text>
             </View>;
         } else if (this.state.classf == '16') {
-            return <View style={[styles.class16]}>
-                <Text style={[styles.colorClass]}> 16 </Text>
+            return <View style={styles.class16}>
+                <Text style={styles.colorClass}> 16 </Text>
             </View>;
         } else {
-            return <View style={[styles.class18]}>
-                <Text style={[styles.colorClass]}> 18 </Text>
+            return <View style={styles.class18}>
+                <Text style={styles.colorClass}> 18 </Text>
             </View>;
         }
     }
@@ -103,7 +103,7 @@ export default class Detalhes extends React.Component {
         const api = ip;
         const id = this.state.idUser
         const idFilme = this.state.idFilme
-        return fetch('http://' + api + ':3000/filmes/confirmarating/' + id + '/' + idFilme)
+        return fetch(api + '/filmes/confirmarating/' + id + '/' + idFilme)
             .then((response) => response.json())
             .then((json) => {
                 if (json.mensagem == '1') {
@@ -121,7 +121,7 @@ export default class Detalhes extends React.Component {
         const idFilme = this.state.idFilme
         const ratingValue = this.state.rating
         const api = ip;
-        fetch(`http://${api}:3000/filmes/updaterating`, {
+        fetch(`${api}/filmes/updaterating`, {
             method: 'PUT',
             headers: {
                 Accept: 'application/json',
@@ -140,6 +140,7 @@ export default class Detalhes extends React.Component {
                         ToastAndroid.LONG,
                         ToastAndroid.CENTER,
                     );
+                    this._totalRating();
                 } else {
                     ToastAndroid.showWithGravity(
                         'Falha na conexão.',
@@ -161,7 +162,7 @@ export default class Detalhes extends React.Component {
         const idFilme = this.state.idFilme
         const ratingValue = this.state.rating
         const api = ip;
-        fetch(`http://${api}:3000/filmes/addrating`, {
+        fetch(`${api}/filmes/addrating`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -180,6 +181,7 @@ export default class Detalhes extends React.Component {
                         ToastAndroid.LONG,
                         ToastAndroid.CENTER,
                     );
+                    this._totalRating();
                 } else {
                     ToastAndroid.showWithGravity(
                         'Falha na conexão.',
@@ -204,7 +206,7 @@ export default class Detalhes extends React.Component {
     _totalRating = async () => {
         const api = ip;
         const idFilme = this.state.idFilme
-        return fetch('http://' + api + ':3000/filmes/totalrating/' + idFilme)
+        return fetch(api + '/filmes/totalrating/' + idFilme)
             .then((response) => response.json())
             .then((json) => {
                 this.setState({
@@ -219,39 +221,40 @@ export default class Detalhes extends React.Component {
         const api = ip;
         const ratingAvaliacao = this.state.RatingTotal
         return (
-            <Container style={[styles.container]}>
+            <Container style={styles.container}>
                     <ScrollView >
-                    <ImageBackground source={{ uri: 'http://' + api + ':3000/imgs/ExibirFilmeBase2.png' }} style={styles.image} >
-                        <View style={[styles.viewImg]}>
-                            <Text style={[styles.titulo]}>
+                    <ImageBackground source={{ uri: api + '/imgs/fundo.png' }} style={styles.image} >
+                        <View style={styles.viewImg}>
+                            <Text style={styles.titulo}>
                                 {this.state.nome}
                             </Text>
-                            <Image source={{ uri: 'http://' + api + ':3000/filmes/poster/' + this.state.foto }} style={[styles.img]} />
+                            <Image source={{ uri: api + '/filmes/poster/' + this.state.foto }} style={styles.img} />
                         </View>
-                        <View style={[styles.viewNome]}>
+                        <View style={styles.viewNome}>
                             {this._classificacao()}
-                            <Text style={[styles.duracao]}>
+                            <Text style={styles.duracao}>
                                 Duração: {this.state.duracao} Min
                         </Text>
                         </View>
+                        </ImageBackground>
                         <View>
-                            <Text style={[styles.sinopse]}>
+                            <Text style={styles.sinopse}>
                                 {this.state.sinopse}
                             </Text>
-                            <Text style={[styles.nome]}>
+                            <Text style={styles.nome}>
                                 Gênero: {this.state.genero}
                             </Text>
-                            <Text style={[styles.nome]}>
+                            <Text style={styles.nome}>
                                 Diretor: {this.state.diretor}
                             </Text>
                         </View>
-                        <View style={[styles.atualrating]} >
-                            <Text style={[styles.avaliacaoText]}>Avaliações:</Text>
-                            <Text style={[styles.avaliacao]}>{ratingAvaliacao}</Text>
+                        <View style={styles.atualrating} >
+                            <Text style={styles.avaliacaoText}>Avaliações:</Text>
+                            <Text style={styles.avaliacao}>{ratingAvaliacao}</Text>
                             <Icon
                                 name='star' size={25} color='#000000' style={styles.IconStar} />
                         </View>
-                        <View style={[styles.rating]}>
+                        <View style={styles.rating}>
                             <AirbnbRating
                                 count={5}
                                 reviews={["Muito ruim", "Ruim", "Okay", "Bom", "Espetacular"]}
@@ -294,7 +297,6 @@ export default class Detalhes extends React.Component {
                                 </View>
                             </TouchableHighlight>
                         </View>
-                        </ImageBackground>
                     </ScrollView>
             </Container >
         );
@@ -311,12 +313,13 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 20,
         borderColor: 'white',
-        marginTop: '7%'
+        marginTop: '2%',
     },
     viewImg: {
         marginLeft: '2%',
         marginTop: '7%',
-        alignItems: 'center'
+        alignItems: 'center',
+        
     },
     nome: {
         color: '#FFFFFF',
@@ -368,7 +371,7 @@ const styles = StyleSheet.create({
     },
     titulo: {
         fontWeight: 'bold',
-        color: '#FFFFFF',
+        color: 'black',
         fontSize: 17,
         marginBottom: 10
     },
@@ -449,6 +452,7 @@ const styles = StyleSheet.create({
         flex: 1,
         resizeMode: "cover",
         justifyContent: "center",
+        marginTop:'5%'
     }
 
 })

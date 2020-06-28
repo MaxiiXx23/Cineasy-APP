@@ -35,7 +35,7 @@ export default class Modaloptions extends Component {
         const idcomentario = navigation.getParam('id', 'NO-ID');
         const idPost = navigation.getParam('idPostModal', 'NO-ID');
         const qntComentarios = navigation.getParam('qntComentModal', 'NO-ID')
-        fetch(`http://${api}:3000/comentarios/deletar/`, {
+        fetch(`${api}/comentarios/deletar/`, {
             method: 'DELETE',
             headers: {
                 Accept: 'application/json',
@@ -52,7 +52,7 @@ export default class Modaloptions extends Component {
                 ToastAndroid.CENTER,
             );
         });
-        fetch(`http://${api}:3000/posts/qntcomentnova/`, {
+        fetch(`${api}/posts/qntcomentnova/`, {
             method: 'PUT',
             headers: {
                 Accept: 'application/json',

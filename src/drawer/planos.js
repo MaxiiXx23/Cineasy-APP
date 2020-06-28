@@ -73,7 +73,9 @@ export default class planos extends Component {
                     <Text> Desconto na primeira assinatura do pacote Hero.</Text>
                 </CardItem>
                 <CardItem bordered>
-                    <Button style={styles.AlingBtn} success rounded>
+                    <Button onPress={() => this.props.navigation.navigate('checkout', {
+                        idplano: '1'
+                    })} style={styles.AlingBtn} success rounded>
                         <Text >Adquira já!</Text>
                     </Button>
                 </CardItem>
@@ -115,7 +117,9 @@ export default class planos extends Component {
                     <Text> Desconto na primeira assinatura do pacote Super Hero.</Text>
                 </CardItem>
                 <CardItem bordered>
-                    <Button style={styles.AlingBtn} success rounded>
+                    <Button onPress={() => this.props.navigation.navigate('checkout', {
+                        idplano: '2'
+                    })} style={styles.AlingBtn} success rounded>
                         <Text >Adquira já!</Text>
                     </Button>
                 </CardItem>
@@ -201,11 +205,11 @@ const styles = StyleSheet.create({
     TitlePlano: {
         color: '#FFD700'
     },
-    ContainerInfos:{
-        flexDirection:'row',
+    ContainerInfos: {
+        flexDirection: 'row',
         alignItems: 'stretch',
     },
-    ValorPlano:{
-        marginLeft:'22%'
+    ValorPlano: {
+        marginLeft: '22%'
     }
 });

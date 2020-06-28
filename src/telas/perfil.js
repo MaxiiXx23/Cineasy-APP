@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { Image, View, StyleSheet, ImageBackground, TouchableHighlight, AsyncStorage, Button, ScrollView, ToastAndroid } from 'react-native';
+import { Image, View, StyleSheet, ImageBackground, TouchableHighlight,StatusBar,TouchableOpacity, AsyncStorage, Button, ScrollView, ToastAndroid } from 'react-native';
 import { Container, Thumbnail, Text, } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import ip from '../components/ip';
@@ -12,7 +12,7 @@ export default class Perfil extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: '',
+      nome: '',
       fotoUser: '',
       frase: '',
       capaUser: ''
@@ -25,16 +25,16 @@ export default class Perfil extends Component {
   }
   componentWillUnmount() {
     this.willBlurListener.remove();
-}
+  }
   loadRepositories = async () => {
     const id = await AsyncStorage.getItem('idUsuario');
     //console.log(id)
     const api = ip;
-    return fetch('http://' + api + ':3000/usuarios/dados/' + id)
+    return fetch(api + '/usuarios/dados/' + id)
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
-          text: responseJson[0].nome,
+          nome: responseJson[0].nome,
           fotoUser: responseJson[0].fotoUser,
           frase: responseJson[0].frase,
           capaUser: responseJson[0].capaUser
@@ -61,49 +61,70 @@ export default class Perfil extends Component {
     const api = ip;
     return (
       <>
+        <StatusBar backgroundColor="black" barStyle="light-content" />
         <Container style={{ backgroundColor: '#191919' }}>
-          <View>
-            <ImageBackground source={{ uri: 'http://' + api + ':3000/fotoperfil/' + this.state.capaUser }} style={[perfil2.capa]}>
-            </ImageBackground>
-            <Thumbnail source={{ uri: 'http://' + api + ':3000/fotoperfil/' + this.state.fotoUser }} style={[perfil2.foto]} />
+          <ImageBackground
+            source={{ uri: api +'/fotoperfil/' + this.state.capaUser }}
+            style={[perfil2.capa]}
+          >
+          </ImageBackground>
+          <View style={perfil2.main}>
+            <Image
+              source={{ uri: api + '/fotoperfil/' + this.state.fotoUser }}
+              style={[perfil2.foto]} />
             <View>
-              <Text style={[perfil2.info]}>
-                {this.state.text}
-              </Text>
-              <Text style={[perfil2.frase]}> {this.state.frase}</Text>
+              <Text style={perfil2.nome}>{this.state.nome}</Text>
+              <Text style={perfil2.frase}>{this.state.frase}</Text>
             </View>
           </View>
-          <Grid style={{ marginTop: 45 }}>
-            <ScrollView>
-              <Row size={75}>
-                <Col style={perfil2.blocoNoft} onPress={() => this.props.navigation.navigate('notificacao')}>
-                  <Icon name="notifications" size={40} style={perfil2.notificacao}  />
-                  <Text style={perfil2.TextNotf}>#FiqueEmCasa</Text>
-                </Col>
-              </Row>
-              <Row size={75}>
-                <Col style={perfil2.bloco} onPress={() => this.props.navigation.navigate('amigos')}>
-                  <Icon name="people" size={80} style={perfil2.icons} />
-                  <Text style={perfil2.text}>Amigos</Text>
-                </Col>
-                <Col style={perfil2.bloco1}>
-                  <Icon name="local-activity" size={80} style={perfil2.icons} />
-                  <Text style={perfil2.text}>Descontos</Text>
-                </Col>
-              </Row>
-              <Row size={100}>
-                <Col style={perfil2.bloco}>
-                  <Icon name="star" size={80} style={perfil2.icons} onPress={() => this.props.navigation.navigate('abaSeguindo')} />
-                  <Text style={perfil2.text}>Seguindo</Text>
-                </Col>
-                <Col style={perfil2.bloco1}>
-                  <Icon name="movie-creation" size={80} style={perfil2.icons} />
-                  <Text style={perfil2.text}>Assistidos</Text>
-                </Col>
-              </Row>
 
-            </ScrollView>
-          </Grid>
+          <ScrollView>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('notificacao')}
+            >
+              <View style={perfil2.cardFull}>
+                <Icon name="notifications" size={40} color="#FFD700" />
+                <Text style={[perfil2.TextNotf, { marginTop: "5%" }]} >#FiqueEmCasa</Text>
+              </View>
+            </TouchableOpacity>
+
+            <Row size={100} style={perfil2.cardRow}>
+              <TouchableOpacity
+                style={perfil2.cardMiddle}
+                onPress={() => this.props.navigation.navigate('amigos')}
+              >
+                <View>
+                  <Icon name="people" size={80} color="#FFD700" style={perfil2.IconCardMiddle} />
+                  <Text style={perfil2.TextNotf}>Amigos</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={perfil2.cardMiddle}
+                onPress={() => { }}
+              >
+                <View>
+                  <Icon name="local-activity" size={80} color="#FFD700" style={perfil2.IconCardMiddle} />
+                  <Text style={perfil2.TextNotf}>Descontos</Text>
+                </View>
+              </TouchableOpacity>
+            </Row>
+
+            <Row size={100} style={perfil2.cardRow}>
+              <TouchableOpacity style={perfil2.cardMiddle} onPress={() => this.props.navigation.navigate('abaSeguindo')}>
+                <View>
+                  <Icon name="star" size={80} color="#FFD700" style={perfil2.IconCardMiddle} />
+                  <Text style={perfil2.TextNotf}>Seguindo</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity style={perfil2.cardMiddle} onPress={() => { }}>
+                <View>
+                  <Icon name="movie-creation" size={80} color="#FFD700" style={perfil2.IconCardMiddle} />
+                  <Text style={perfil2.TextNotf}>Assistidos</Text>
+                </View>
+              </TouchableOpacity>
+            </Row>
+
+          </ScrollView>
         </Container>
       </>
     );
@@ -112,92 +133,67 @@ export default class Perfil extends Component {
 
 
 const perfil2 = StyleSheet.create({
-  cabecalho: {
-    backgroundColor: "#000000"
-  },
-  cog: {
-    color: 'white',
-    marginTop: '-5%',
-    marginLeft: '90%',
-    height: 20,
-    width: 30,
-    backgroundColor: 'transparent',
+  main: {
+    display: "flex",
+    alignItems: "center"
   },
   capa: {
-    height: 200,
+    height: 250,
   },
   foto: {
-    marginLeft: '42%',
-    marginTop: '-35%'
-
+    position: "relative",
+    height: 80,
+    width: 80,
+    borderRadius: 4,
+    marginTop: -40
   },
-  info: {
+  nome: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 20,
-    marginLeft: '34%'
+    fontSize: 24,
+    marginTop: 20,
+    textAlign:'center',
+    marginBottom: 10,
   },
   frase: {
     color: 'white',
     fontSize: 15,
-    marginLeft: '30%',
-    width: 300
+    textAlign:'center',
+    marginBottom: 20,
   },
-  addFriend: {
+  cardFull: {
     color: 'white',
-    marginLeft: 5,
-    marginTop: '-45%',
-    height: 20,
-    width: 50,
-    backgroundColor: 'transparent',
-  },
-  EspaceCapa: {
-    marginTop: 29
-  },
-  icons: {
-    color: '#FFD700',
-    marginLeft: '30%',
-    marginTop: '30%'
-  },
-  bloco1: {
+    height: 150,
     backgroundColor: '#303030',
-    height: 200,
-    width: 200,
-    borderRadius: 15,
-    marginLeft: 7,
-    marginTop: 3
+    padding: 10,
+    borderRadius: 4,
+    margin: 15
   },
-  bloco: {
-    backgroundColor: '#303030',
-    height: 200,
-    width: 200,
-    borderRadius: 15,
-    marginTop: 3
-  },
-  text: {
+  cardRow: {
     color: 'white',
-    marginLeft: '30%'
+    height: 150,
+    justifyContent: "space-between",
+    marginLeft: 15,
+    marginRight: 15,
+    marginBottom: 15
   },
-  notificacao: {
-    color: '#FFD700',
-    marginLeft: '2%',
-    marginTop: '2%'
+  cardMiddle: {
+    color: 'white',
+    height: 150,
+    width: "48%",
+    backgroundColor: '#303030',
+    padding: 10,
+    borderRadius: 4,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  IconCardMiddle: {
+    paddingBottom: 0
   },
   TextNotf: {
     color: 'white',
-    marginLeft: '2%',
-    marginTop: '10%',
-    textAlign: 'center'
-  },
-  blocoNoft: {
-    backgroundColor: '#303030',
-    height: 200,
-    width: 400,
-    borderRadius: 15,
-    marginTop: 3,
-    marginLeft: 5
+    textAlign: 'center',
+    fontSize: 18
   }
-
-
-
 });

@@ -27,7 +27,7 @@ export default class Postimagem extends Component {
     const { navigation } = this.props;
     const id_post = navigation.getParam('itemId', 'NO-ID');
     const api = ip;
-    return fetch('http://' + api + ':3000/posts/post/' + id_post)
+    return fetch(api + '/posts/post/' + id_post)
       .then((response) => response.json())
       .then((responseJson) => {
         console.log(responseJson[0].img_post)
@@ -63,7 +63,7 @@ export default class Postimagem extends Component {
         </Header>
         <GallerySwiper
           images={[
-            { uri: "http://" + api + ":3000/posts/"+this.state.img_post },
+            { uri: api + "/posts/"+this.state.img_post },
 
           ]}
         />

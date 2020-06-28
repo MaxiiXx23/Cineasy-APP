@@ -5,17 +5,6 @@ import { Container, Thumbnail, Text, Picker, Form } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import ip from '../components/ip';
 export default class Perfilusuario extends Component {
-    static navigationOptions = {
-        drawerLabel: 'Perfil do usuário',
-        headerTintColor: 'white',
-        headerStyle: {
-            backgroundColor: '#191919',
-        },
-        headerTitleStyle: {
-            color: 'white'
-        },
-
-    };
     constructor(props) {
         super(props);
         this.state = {
@@ -46,7 +35,7 @@ export default class Perfilusuario extends Component {
         const id = navigation.getParam('itemId', 'NO-ID');
         //console.log(id)
         const api = ip;
-        return fetch('http://' + api + ':3000/usuarios/dados/' + id)
+        return fetch( api + '/usuarios/dados/' + id)
             .then((response) => response.json())
             .then((responseJson) => {
                 this.setState({
@@ -70,9 +59,9 @@ export default class Perfilusuario extends Component {
     _fotousuario() {
         const api = ip;
         if (this.state.fotoUser == null) {
-            return <Thumbnail source={{ uri: 'http://' + api + ':3000/imgs/avatarperfil.png' }} style={[perfil2.foto]} />
+            return <Thumbnail source={{ uri: api + '/imgs/avatarperfil.png' }} style={[perfil2.foto]} />
         } else {
-            return <Thumbnail source={{ uri: 'http://' + api + ':3000/fotoperfil/' + this.state.fotoUser }} style={[perfil2.foto]} />
+            return <Thumbnail source={{ uri:  api + '/fotoperfil/' + this.state.fotoUser }} style={[perfil2.foto]} />
         }
     }
     _verificaAmizade = async () => {
@@ -80,7 +69,7 @@ export default class Perfilusuario extends Component {
         const { navigation } = this.props;
         const id = navigation.getParam('itemId', 'NO-ID');
         const api = ip;
-        return fetch('http://' + api + ':3000/usuarios/verificaamizade/' + id + '/' + idUserLogado)
+        return fetch( api + '/usuarios/verificaamizade/' + id + '/' + idUserLogado)
             .then((response) => response.json())
             .then((responseJson) => {
                 const dadosAmizade = responseJson
@@ -200,7 +189,7 @@ export default class Perfilusuario extends Component {
         const api = ip;
         const { navigation } = this.props;
         const id = navigation.getParam('itemId', 'NO-ID');
-        fetch('http://' + api + ':3000/usuarios/adicionaramigos/' + idUserLogado, {
+        fetch(api + '/usuarios/adicionaramigos/' + idUserLogado, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -224,7 +213,7 @@ export default class Perfilusuario extends Component {
         const id_amigos = navigation.getParam('id_amigos', 'NO-ID');
         const api = ip;
         //console.log(id_amigos)
-        fetch('http://' + api + ':3000/usuarios/excluiramigos/' + id_amigos, {
+        fetch(api + '/usuarios/excluiramigos/' + id_amigos, {
             method: 'DELETE',
             headers: {
                 Accept: 'application/json',
@@ -252,7 +241,7 @@ export default class Perfilusuario extends Component {
         const { navigation } = this.props;
         const id_amigos = navigation.getParam('id_amigos', 'NO-ID');
         const api = ip;
-        fetch('http://' + api + ':3000/usuarios/confirmaramizade/' + id_amigos, {
+        fetch(api + '/usuarios/confirmaramizade/' + id_amigos, {
             method: 'PUT',
             headers: {
                 Accept: 'application/json',
@@ -282,7 +271,7 @@ export default class Perfilusuario extends Component {
             <>
                 <Container style={{ backgroundColor: '#191919' }}>
                     <View>
-                        <ImageBackground source={{ uri: 'http://' + api + ':3000/fotoperfil/' + this.state.capaUser }} style={[perfil2.capa]}>
+                        <ImageBackground source={{ uri: api + '/fotoperfil/' + this.state.capaUser }} style={[perfil2.capa]}>
                         </ImageBackground>
                         {this._fotousuario()}
                         <View>

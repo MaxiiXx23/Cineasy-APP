@@ -20,10 +20,9 @@ export default class Amigos extends Component {
     _listAmigos = async () => {
         const id = await AsyncStorage.getItem('idUsuario');
         const api = ip;
-        return fetch(`http://${api}:3000/usuarios/listaramigos/${id}`)
+        return fetch(`${api}/usuarios/listaramigos/${id}`)
                 .then((response) => response.json())
                 .then((responseJson) => {
-                    console.log(responseJson)
                     this.setState({
                         DadosAmigos: responseJson,
                     });
@@ -46,7 +45,7 @@ export default class Amigos extends Component {
         let nome = this.state.TextInputSearch
         const api = ip;
         if (!nome == "") {
-            return fetch(`http://${api}:3000/usuarios/buscarusuarios/${nome}`)
+            return fetch(`${api}/usuarios/buscarusuarios/${nome}`)
                 .then((response) => response.json())
                 .then((responseJson) => {
                     console.log(responseJson)
@@ -93,7 +92,7 @@ export default class Amigos extends Component {
                             }}
                         >
                             <View style={styles.itemList}>
-                                <Thumbnail small source={{ uri: 'http://' + api + ':3000/fotoperfil/' + item.fotoUser }} />
+                                <Thumbnail small source={{ uri:  api + '/fotoperfil/' + item.fotoUser }} />
                                 <Text style={styles.itemText} >{item.nome}</Text>
                             </View>
                         </TouchableHighlight>
@@ -114,7 +113,7 @@ export default class Amigos extends Component {
                                 }}
                             >
                                 <View style={styles.itemList}>
-                                    <Thumbnail small source={{ uri: 'http://' + api + ':3000/fotoperfil/' + item.fotouser }} />
+                                    <Thumbnail small source={{ uri: api + '/fotoperfil/' + item.fotouser }} />
                                     <Text style={styles.itemText} >{item.nome}</Text>
                                 </View>
                             </TouchableHighlight>

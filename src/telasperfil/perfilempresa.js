@@ -33,7 +33,7 @@ export default class Perfilempresa extends Component {
         const { navigation } = this.props;
         const idEmpresa = navigation.getParam('itemId', 'NO-ID');
         const api = ip;
-        return fetch('http://' + api + ':3000/posts/postempresa/' + idEmpresa + '/4')
+        return fetch( api + '/posts/postempresa/' + idEmpresa + '/4')
             .then((response) => response.json())
             .then((responseJson) => {
                 this.setState({
@@ -56,7 +56,7 @@ export default class Perfilempresa extends Component {
         const { navigation } = this.props;
         const idEmpresa = navigation.getParam('itemId', 'NO-ID');
         const api = ip;
-        return fetch('http://' + api + ':3000/posts/totalposts/' + idEmpresa)
+        return fetch( api + '/posts/totalposts/' + idEmpresa)
             .then((response) => response.json())
             .then((responseJson) => {
                 this.setState({
@@ -75,7 +75,7 @@ export default class Perfilempresa extends Component {
         const { navigation } = this.props;
         const idEmpresa = navigation.getParam('itemId', 'NO-ID');
         const api = ip;
-        return fetch('http://' + api + ':3000/empresa/totalseguidores/' + idEmpresa)
+        return fetch( api + '/empresa/totalseguidores/' + idEmpresa)
             .then((response) => response.json())
             .then((responseJson) => {
                 console.log(responseJson)
@@ -96,7 +96,7 @@ export default class Perfilempresa extends Component {
         const idUserLogado = await AsyncStorage.getItem('idUsuario');
         const idEmpresa = navigation.getParam('itemId', 'NO-ID');
         const api = ip;
-        return fetch('http://' + api + ':3000/empresa/verificaseguir/' + idEmpresa + '/' + idUserLogado)
+        return fetch( api + '/empresa/verificaseguir/' + idEmpresa + '/' + idUserLogado)
             .then((response) => response.json())
             .then((responseJson) => {
                 const dadosSeguir = responseJson
@@ -141,7 +141,7 @@ export default class Perfilempresa extends Component {
         const idUserLogado = await AsyncStorage.getItem('idUsuario');
         const idEmpresa = navigation.getParam('itemId', 'NO-ID');
         const api = ip;
-        fetch('http://' + api + ':3000/empresa/seguir/' + idUserLogado, {
+        fetch(api + '/empresa/seguir/' + idUserLogado, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -169,7 +169,7 @@ export default class Perfilempresa extends Component {
     _naoSeguir = async () => {
         const id_seguir = this.state.id_seguir;
         const api = ip;
-        fetch('http://' + api + ':3000/empresa/excluirseguir/' + id_seguir, {
+        fetch(api + '/empresa/excluirseguir/' + id_seguir, {
             method: 'DELETE',
             headers: {
                 Accept: 'application/json',
@@ -210,7 +210,7 @@ export default class Perfilempresa extends Component {
                 </Header>
                 <Content >
                     <View style={styles.ContainerInfos}>
-                        <Thumbnail large source={{ uri: 'http://' + api + ':3000/fotoperfil/' + this.state.fotoUser }} />
+                        <Thumbnail large source={{ uri:api + '/fotoperfil/' + this.state.fotoUser }} />
                         <View>
                         <Text style={styles.numberinfo}>{this.state.totalposts}</Text>
                             <Text style={styles.descinfo}>Publicações</Text>
@@ -237,7 +237,7 @@ export default class Perfilempresa extends Component {
                                 <Image
                                     style={styles.Img}
                                     source={{
-                                        uri: 'http://' + api + ':3000/posts/' + item.img_post,
+                                        uri: api + '/posts/' + item.img_post,
                                     }}
                                 />
                             </TouchableWithoutFeedback>

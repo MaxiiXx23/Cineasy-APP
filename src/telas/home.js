@@ -37,7 +37,7 @@ export default class Home extends React.Component {
     })
     const { page } = this.state;
     const api = ip;
-    return fetch(`http://${api}:3000/posts/ver/${page}`)
+    return fetch(`${api}/posts/ver/${page}`)
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
@@ -63,7 +63,7 @@ export default class Home extends React.Component {
     const idUser = this.state.idUser
     const idPost = this.state.id
     if (this.lastTap && (now - this.lastTap) < DOUBLE_PRESS_DELAY) {
-      return fetch('http://' + api + ':3000/posts/confirmalike/' + idUser + '/' + idPost)
+      return fetch( api + '/posts/confirmalike/' + idUser + '/' + idPost)
         .then((response) => response.json())
         .then((json) => {
           if (json.mensagem == '1') {
@@ -83,7 +83,7 @@ export default class Home extends React.Component {
     const api = ip;
     const idUser = this.state.idUser
     const idPost = this.state.id
-    fetch(`http://${api}:3000/posts/deletelike`, {
+    fetch(`${api}/posts/deletelike`, {
       method: 'DELETE',
       headers: {
         Accept: 'application/json',
@@ -111,7 +111,7 @@ export default class Home extends React.Component {
     const api = ip;
     const idUser = this.state.idUser
     const idPost = this.state.id
-    fetch(`http://${api}:3000/posts/addlike`, {
+    fetch(`${api}/posts/addlike`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -138,7 +138,7 @@ export default class Home extends React.Component {
     const api = ip;
     const like = this.state.like
     const idPost = this.state.id
-    fetch(`http://${api}:3000/posts/like`, {
+    fetch(`${api}/posts/like`, {
       method: 'PUT',
       headers: {
         Accept: 'application/json',
@@ -170,7 +170,7 @@ export default class Home extends React.Component {
     const api = ip;
     const like = this.state.like
     const idPost = this.state.id
-    fetch(`http://${api}:3000/posts/retiralike`, {
+    fetch(`${api}/posts/retiralike`, {
       method: 'PUT',
       headers: {
         Accept: 'application/json',
@@ -231,7 +231,7 @@ export default class Home extends React.Component {
                      onPress={() => this.props.navigation.navigate('PerfilEmpresa', {
                       itemId: item.id_user
                     })}>
-                    <Thumbnail source={{ uri: 'http://' + this.state.api + ':3000/fotoperfil/'+ item.fotoUser }} 
+                    <Thumbnail source={{ uri: this.state.api + '/fotoperfil/'+ item.fotoUser }} 
                      />
                      </TouchableWithoutFeedback>
                     <Body>
@@ -247,7 +247,7 @@ export default class Home extends React.Component {
                       id: item.id_post
                     }); this._handleDoubleTap();
                   }}>
-                    <Image source={{ uri: 'http://' + api + ':3000/posts/' + item.img_post }} style={{ width: w.width, height: w.width, flex: 1, borderRadius: 15 }} />
+                    <Image source={{ uri: api + '/posts/' + item.img_post }} style={{ width: w.width, height: w.width, flex: 1, borderRadius: 15 }} />
                   </TouchableWithoutFeedback>
                 </CardItem>
                 <CardItem style={styles.card}>
@@ -287,7 +287,7 @@ export default class Home extends React.Component {
               return <Card style={styles.card} >
                 <CardItem style={styles.card} >
                   <Left>
-                    <Thumbnail source={{ uri: 'http://' + this.state.api + ':3000/fotoperfil/'+ item.fotoUser }} />
+                    <Thumbnail source={{ uri: this.state.api + '/fotoperfil/'+ item.fotoUser }} />
                     <Body>
                       <Text style={{ fontWeight: 'bold', color: "#fff" }}>{item.nomeFantasia}</Text>
                       <Text style={{ color: "#fff" }} note>{item.note}</Text>
@@ -299,7 +299,7 @@ export default class Home extends React.Component {
                     this._pause();
                     this._fullScrenn();
                   }}>
-                    <Video source={{ uri: 'http://' + api + ':3000/posts/' + item.img_post }}
+                    <Video source={{ uri: + api + '/posts/' + item.img_post }}
                       ref={(ref) => {
                         this.player = ref
                       }}
