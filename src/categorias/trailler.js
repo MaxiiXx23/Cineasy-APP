@@ -19,7 +19,6 @@ export default class Trailler extends React.Component {
                     videoId={idTrailer} 
                     apiKey="AIzaSyANHo2FO1TIvJX49TJT_CYjmZWFFt3XMNk"
                     play={this.state.statusplay}
-                    fullscreen={true}
                     style={{ alignSelf: 'stretch', height: 300 }}
                 />
             </View>

@@ -6,43 +6,63 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import login from './src/telas/login';
 import AuthLoadingScreen from './src/telas/AuthLoadingScreen';
 import cadastro from './src/telas/cadastro';
-import filmes from './src/telas/filmes';
+import Filmes from './src/telas/filmes';
 import drawer from './src/drawer/drawer';
 import Cinemas from './src/telas/cinemas';
 import Detalhes from './src/categorias/detalhes'
 import RootStack from './src/components/navegaHome';
+import Trailler from './src/categorias/trailler';
+import Sessao from './src/compras/sessao';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 // rotas do aplicativo
 // colocar o ID do usuario no asyncStorage e usar nas rotas
+const FilmStack = createStackNavigator({
+  filmes: {
+    screen: Filmes,
+    navigationOptions: {
+      tabBarLabel: 'filmes',
+      showIcon: true,
+      tabBarIcon: ({ tintColor }) => (
+        <Icon name="movie" size={20} color={tintColor} />
+      )
+    },
+  },
+    details:
+      Detalhes,
+    Trailer: 
+      Trailler,
+      Sessao:
+        Sessao
+  },{ headerMode: 'none' });
 const Tabs = createBottomTabNavigator({
   Feed: {
     screen: RootStack,
     navigationOptions: {
-      showIcon: true ,
+      showIcon: true,
       tabBarLabel: 'Feed',
       tabBarIcon: ({ tintColor }) => (
-        <Icon name="home" size={20} color={tintColor}/>
+        <Icon name="home" size={20} color={tintColor} />
       )
     },
   },
   Filmes: {
-    screen: filmes,
+    screen: FilmStack,
     navigationOptions: {
       tabBarLabel: 'filmes',
-      showIcon: true ,
+      showIcon: true,
       tabBarIcon: ({ tintColor }) => (
-        <Icon name="movie" size={20} color={tintColor}/>
+        <Icon name="movie" size={20} color={tintColor} />
       )
     },
   },
-  Cinemas:{
+  Cinemas: {
     screen: Cinemas,
-    navigationOptions:{
-      tabBarLabel:'Cinemas',
-      showIcon: true ,
+    navigationOptions: {
+      tabBarLabel: 'Cinemas',
+      showIcon: true,
       tabBarIcon: ({ tintColor }) => (
-        <Icon name="store" size={20} color={tintColor}/>
+        <Icon name="store" size={20} color={tintColor} />
       )
     }
   },
@@ -50,29 +70,25 @@ const Tabs = createBottomTabNavigator({
     screen: drawer,
     navigationOptions: {
       tabBarLabel: 'Perfil',
-      showIcon: true ,
+      showIcon: true,
       tabBarIcon: ({ tintColor }) => (
-        <Icon name="person" size={20} color={tintColor}/>
+        <Icon name="person" size={20} color={tintColor} />
       )
     },
-  },  
-},{
-  tabBarOptions:{
-    style:{
-      backgroundColor:'black'
+  },
+}, {
+  tabBarOptions: {
+    style: {
+      backgroundColor: 'black'
     },
     activeTintColor: '#FFD700',
   }
 });
 
-const Stacks = createStackNavigator({
-  detalhes:
-     Detalhes,
-});
 
-const cadastroStack = createStackNavigator({SignIn: login,SignUp: cadastro},{headerMode:'none'});
-const AuthStack = createStackNavigator({ SignIn: login },{
-  headerMode:'none'
+const cadastroStack = createStackNavigator({ SignIn: login, SignUp: cadastro }, { headerMode: 'none' });
+const AuthStack = createStackNavigator({ SignIn: login }, {
+  headerMode: 'none'
 });
 
 export default createAppContainer(
@@ -81,8 +97,7 @@ export default createAppContainer(
       AuthLoading: AuthLoadingScreen,
       App: Tabs,
       Auth: AuthStack,
-      cadastro : cadastroStack,
-      Detalhes: Stacks
+      cadastro: cadastroStack
     },
     {
       initialRouteName: 'AuthLoading'

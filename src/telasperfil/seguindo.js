@@ -23,12 +23,10 @@ export default class Seguindo extends Component {
         return fetch(`${api}/empresa/listarseguindo/${id}`)
             .then((response) => response.json())
             .then((responseJson) => {
-                console.log(responseJson)
                 this.setState({
                     DadosSeguindo: responseJson,
                 });
             }).catch((error) => {
-                //console.error(error);
                 ToastAndroid.showWithGravity(
                     'Usuário não encontrado.',
                     ToastAndroid.LONG,
@@ -49,15 +47,13 @@ export default class Seguindo extends Component {
             return fetch(`${api}/empresa/buscarredes/${nome}`)
                 .then((response) => response.json())
                 .then((responseJson) => {
-                    console.log(responseJson)
                     this.setState({
                         dataSource: responseJson,
                     }, function () {
                     });
                 }).catch((error) => {
-                    //console.error(error);
                     ToastAndroid.showWithGravity(
-                        'Usuário não encontrado.',
+                        'Rede de cinema não encontrada.',
                         ToastAndroid.LONG,
                         ToastAndroid.CENTER,
                     );

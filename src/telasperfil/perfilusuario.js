@@ -33,7 +33,6 @@ export default class Perfilusuario extends Component {
             idUsuarioLogado:idUserLogado
         })
         const id = navigation.getParam('itemId', 'NO-ID');
-        //console.log(id)
         const api = ip;
         return fetch( api + '/usuarios/dados/' + id)
             .then((response) => response.json())
@@ -48,7 +47,6 @@ export default class Perfilusuario extends Component {
 
             })
             .catch((error) => {
-                //console.error(error);
                 ToastAndroid.showWithGravity(
                     'Falha na conexão.',
                     ToastAndroid.LONG,
@@ -77,12 +75,10 @@ export default class Perfilusuario extends Component {
                     this.setState({
                         statusAmizade: '1'
                     })
-                    //console.log(this.state.statusAmizade)
                 } else if (dadosAmizade.mensagem == '0') {
                     this.setState({
                         statusAmizade: '0'
                     })
-                    //console.log(this.state.statusAmizade)
                 } else {
                     this.setState({
                         statusAmizade: '2'
@@ -90,7 +86,6 @@ export default class Perfilusuario extends Component {
                 }
             })
             .catch((error) => {
-                //console.error(error);
                 ToastAndroid.showWithGravity(
                     'Falha na conexão.',
                     ToastAndroid.LONG,
@@ -105,7 +100,6 @@ export default class Perfilusuario extends Component {
         const { navigation } = this.props;
         const Pendente = navigation.getParam('Pendente', 'NO-ID');
         const idUser = navigation.getParam('itemId', 'NO-ID');
-        console.log(idUser)
         if(idUserLogado == idUser){
             return <View style={perfil2.containerBtns}><Text></Text></View>
         }else if (Pendente == '3') {
@@ -199,7 +193,6 @@ export default class Perfilusuario extends Component {
                 idSolicitado: id
             }),
         }).catch((error) => {
-            console.error(error);
             ToastAndroid.showWithGravity(
                 'Falha na conexão.',
                 ToastAndroid.LONG,
@@ -229,7 +222,6 @@ export default class Perfilusuario extends Component {
                 this._verificaAmizade();
             }
         }).catch((error) => {
-            console.error(error);
             ToastAndroid.showWithGravity(
                 'Falha na conexão.',
                 ToastAndroid.LONG,
@@ -257,7 +249,6 @@ export default class Perfilusuario extends Component {
                 this._verificaAmizade();
             }
         }).catch((error) => {
-            console.error(error);
             ToastAndroid.showWithGravity(
                 'Falha na conexão.',
                 ToastAndroid.LONG,

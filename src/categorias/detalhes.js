@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ImageBackground, TouchableHighlight, Image, StyleSheet, ScrollView, AsyncStorage, ToastAndroid } from 'react-native';
-import { Container } from 'native-base';
+import { Container, Header, Button, Left, Body, Title } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Rating, AirbnbRating } from 'react-native-ratings';
 import ip from '../components/ip';
@@ -214,7 +214,11 @@ export default class Detalhes extends React.Component {
                 })
             })
             .catch((error) => {
-                console.error(error);
+                ToastAndroid.showWithGravity(
+                    'Falha na conexão.',
+                    ToastAndroid.LONG,
+                    ToastAndroid.CENTER,
+                );
             });
     }
     render() {
@@ -222,7 +226,17 @@ export default class Detalhes extends React.Component {
         const ratingAvaliacao = this.state.RatingTotal
         return (
             <Container style={styles.container}>
-                    <ScrollView >
+                <Header androidStatusBarColor="#191919" searchBar style={styles.header} rounded>
+                    <Left>
+                        <Button transparent>
+                            <Icon name='arrow-back' size={25} color='white' onPress={() => this.props.navigation.goBack()} />
+                        </Button>
+                    </Left>
+                    <Body>
+                        <Title>{this.state.nome}</Title>
+                    </Body>
+                </Header>
+                <ScrollView >
                     <ImageBackground source={{ uri: api + '/imgs/fundo.png' }} style={styles.image} >
                         <View style={styles.viewImg}>
                             <Text style={styles.titulo}>
@@ -236,68 +250,72 @@ export default class Detalhes extends React.Component {
                                 Duração: {this.state.duracao} Min
                         </Text>
                         </View>
-                        </ImageBackground>
-                        <View>
-                            <Text style={styles.sinopse}>
-                                {this.state.sinopse}
-                            </Text>
-                            <Text style={styles.nome}>
-                                Gênero: {this.state.genero}
-                            </Text>
-                            <Text style={styles.nome}>
-                                Diretor: {this.state.diretor}
-                            </Text>
-                        </View>
-                        <View style={styles.atualrating} >
-                            <Text style={styles.avaliacaoText}>Avaliações:</Text>
-                            <Text style={styles.avaliacao}>{ratingAvaliacao}</Text>
-                            <Icon
-                                name='star' size={25} color='#000000' style={styles.IconStar} />
-                        </View>
-                        <View style={styles.rating}>
-                            <AirbnbRating
-                                count={5}
-                                reviews={["Muito ruim", "Ruim", "Okay", "Bom", "Espetacular"]}
-                                defaultRating={5}
-                                size={20}
-                                onFinishRating={this.ratingCompleted}
-                            />
-                        </View>
-                        <View>
-                            <TouchableHighlight
-                                onPress={() => {
-                                    this.props.navigation.navigate('Trailer', {
-                                        trailler: this.state.trailler,
-
-                                    });
-                                }}
-                                style={styles.btnClickContain}
-                                underlayColor='#FFFF00'>
-                                <View
-                                    style={styles.btnContainer}>
-                                    <Icon
-                                        name='movie'
-                                        size={25}
-                                        color='#000000'
-                                        style={styles.btnIcon} />
-                                    <Text style={styles.btnText}>Trailer</Text>
-                                </View>
-                            </TouchableHighlight>
-                            <TouchableHighlight
-                                style={styles.btnClickContain}
-                                underlayColor='#FFFF00'>
-                                <View
-                                    style={styles.btnContainer}>
-                                    <Icon
-                                        name='local-activity'
-                                        size={25}
-                                        color='#000000'
-                                        style={styles.btnIcon} />
-                                    <Text style={styles.btnText}>Comprar Ingresso</Text>
-                                </View>
-                            </TouchableHighlight>
-                        </View>
-                    </ScrollView>
+                    </ImageBackground>
+                    <View>
+                        <Text style={styles.sinopse}>
+                            {this.state.sinopse}
+                        </Text>
+                        <Text style={styles.nome}>
+                            Gênero: {this.state.genero}
+                        </Text>
+                        <Text style={styles.nome}>
+                            Diretor: {this.state.diretor}
+                        </Text>
+                    </View>
+                    <View style={styles.atualrating} >
+                        <Text style={styles.avaliacaoText}>Avaliações:</Text>
+                        <Text style={styles.avaliacao}>{ratingAvaliacao}</Text>
+                        <Icon
+                            name='star' size={25} color='#000000' style={styles.IconStar} />
+                    </View>
+                    <View style={styles.rating}>
+                        <AirbnbRating
+                            count={5}
+                            reviews={["Muito ruim", "Ruim", "Okay", "Bom", "Espetacular"]}
+                            defaultRating={5}
+                            size={20}
+                            onFinishRating={this.ratingCompleted}
+                        />
+                    </View>
+                    <View>
+                        <TouchableHighlight
+                            onPress={() => {
+                                this.props.navigation.navigate('Trailer', {
+                                    trailler: this.state.trailler,
+                                });
+                            }}
+                            style={styles.btnClickContain}
+                            underlayColor='#FFFF00'>
+                            <View
+                                style={styles.btnContainer}>
+                                <Icon
+                                    name='movie'
+                                    size={25}
+                                    color='#000000'
+                                    style={styles.btnIcon} />
+                                <Text style={styles.btnText}>Trailer</Text>
+                            </View>
+                        </TouchableHighlight>
+                        <TouchableHighlight
+                            onPress={() => {
+                                this.props.navigation.navigate('Sessao', {
+                                    sessao: '1',
+                                });
+                            }}
+                            style={styles.btnClickContain}
+                            underlayColor='#FFFF00'>
+                            <View
+                                style={styles.btnContainer}>
+                                <Icon
+                                    name='local-activity'
+                                    size={25}
+                                    color='#000000'
+                                    style={styles.btnIcon} />
+                                <Text style={styles.btnText}>Comprar Ingresso</Text>
+                            </View>
+                        </TouchableHighlight>
+                    </View>
+                </ScrollView>
             </Container >
         );
     }
@@ -307,19 +325,22 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#000000'
     },
+    header: {
+        backgroundColor: "#000000",
+    },
     img: {
         height: 300,
         width: 200,
         borderWidth: 1,
         borderRadius: 20,
         borderColor: 'white',
-        marginTop: '2%',
+        marginTop: '11%',
     },
     viewImg: {
         marginLeft: '2%',
-        marginTop: '7%',
+        marginTop: '3%',
         alignItems: 'center',
-        
+
     },
     nome: {
         color: '#FFFFFF',
@@ -367,13 +388,14 @@ const styles = StyleSheet.create({
     sinopse: {
         lineHeight: 19,
         color: '#FFFFFF',
-        marginTop: 50
+        marginTop: 50,
+        marginBottom: 10
     },
     titulo: {
         fontWeight: 'bold',
         color: 'black',
         fontSize: 17,
-        marginBottom: 10
+        marginTop: 20
     },
     colorClass: {
         color: '#FFFFFF'
@@ -452,7 +474,7 @@ const styles = StyleSheet.create({
         flex: 1,
         resizeMode: "cover",
         justifyContent: "center",
-        marginTop:'5%'
+        marginTop: '9%'
     }
 
 })

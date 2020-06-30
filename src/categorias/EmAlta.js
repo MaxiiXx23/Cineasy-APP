@@ -5,6 +5,7 @@ import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import Detalhes from './detalhes';
 import Trailler from './trailler';
+import Sessao from '../compras/sessao';
 import ip from '../components/ip';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 console.disableYellowBox = true;
@@ -117,7 +118,8 @@ const RootStack = createStackNavigator(
     {
         EmAlta: EmAlta,
         Details: Detalhes,
-        Trailer: Trailler
+        Trailer: Trailler,
+        Sessao: Sessao
     },
     {
         initialRouteName: 'EmAlta',
