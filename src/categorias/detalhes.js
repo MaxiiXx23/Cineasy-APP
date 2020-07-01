@@ -15,7 +15,8 @@ export default class Detalhes extends React.Component {
             rating: '',
             idUser: '',
             idFilme: '',
-            RatingTotal: ''
+            RatingTotal: '',
+            UserRatingTotal:''
         };
     }
     async componentDidMount() {
@@ -210,7 +211,8 @@ export default class Detalhes extends React.Component {
             .then((response) => response.json())
             .then((json) => {
                 this.setState({
-                    RatingTotal: json.ratingFinal
+                    RatingTotal: json.ratingFinal,
+                    UserRatingTotal: json.totalusers,
                 })
             })
             .catch((error) => {
@@ -224,6 +226,7 @@ export default class Detalhes extends React.Component {
     render() {
         const api = ip;
         const ratingAvaliacao = this.state.RatingTotal
+        const personAvaliacao = this.state.UserRatingTotal
         return (
             <Container style={styles.container}>
                 <Header androidStatusBarColor="#191919" searchBar style={styles.header} rounded>
@@ -253,7 +256,7 @@ export default class Detalhes extends React.Component {
                     </ImageBackground>
                     <View>
                         <Text style={styles.sinopse}>
-                            {this.state.sinopse}
+                            Sinopse: {this.state.sinopse}
                         </Text>
                         <Text style={styles.nome}>
                             Gênero: {this.state.genero}
@@ -265,8 +268,9 @@ export default class Detalhes extends React.Component {
                     <View style={styles.atualrating} >
                         <Text style={styles.avaliacaoText}>Avaliações:</Text>
                         <Text style={styles.avaliacao}>{ratingAvaliacao}</Text>
-                        <Icon
-                            name='star' size={25} color='#000000' style={styles.IconStar} />
+                        <Icon name='star' size={25} color='#000000' style={styles.IconStar} />
+                        <Text style={styles.avaliacao}>{personAvaliacao}</Text>
+                        <Icon name='people' size={25} color='#000000' style={styles.IconStar} />
                     </View>
                     <View style={styles.rating}>
                         <AirbnbRating
