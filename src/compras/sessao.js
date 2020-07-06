@@ -54,7 +54,7 @@ export default class Sessao extends Component {
                 </Header>
                 <WebView
                     source={{
-                        uri: `${api}/pagamento/sessao`
+                        uri: `${api}/sessao/sessao`
                     }}
                 />
             </Container>

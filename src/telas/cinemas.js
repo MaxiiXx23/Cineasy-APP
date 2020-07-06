@@ -1,8 +1,9 @@
 import React from 'react';
+import { Container, Header, Item, Input, Text } from 'native-base';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
     View,
     TouchableHighlight,
-    Text,
     TouchableOpacity,
     TextInput,
     Dimensions,
@@ -11,7 +12,8 @@ import {
 } from 'react-native';
 import MapView from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
-import getDirections from 'react-native-google-maps-directions'
+import getDirections from 'react-native-google-maps-directions';
+
 import { PermissionsAndroid } from 'react-native';
 
 import Geocoder from 'react-native-geocoding';
@@ -26,13 +28,13 @@ export default class Cinemas extends React.Component {
 
     state = {
 
-        origin: { latitude: 42.3616132, longitude: -71.0672576 },
+        origin: { latitude: -23.4423788, longitude: -46.317623 },
         destination: { latitude: 42.3730591, longitude: -71.033754 },
         originText: '',
         destinationText: '',
         longitude: '',
         latitude: '',
-        KeyApiMaps : 'AIzaSyANHo2FO1TIvJX49TJT_CYjmZWFFt3XMNk'
+        KeyApiMaps: 'AIzaSyANHo2FO1TIvJX49TJT_CYjmZWFFt3XMNk'
 
     };
 
@@ -61,17 +63,6 @@ export default class Cinemas extends React.Component {
             console.warn(err)
         }
 
-    }
-
-    async componentDidMount() {
-        Geolocation.getCurrentPosition(info => {
-            this.setState({
-                origin:{latitude: info.coords.latitude, longitude: info.coords.longitude}
-            })
-            //console.log(this.state.origin)
-        }
-
-        );
     }
     handleButton = () => {
 
@@ -140,9 +131,18 @@ export default class Cinemas extends React.Component {
     render() {
         console.log(this.state.origin.latitude)
         return (
-
+            <Container>
+                <View style={styles.cabecalho}>
+                    <Text style={styles.title}>Cineasy</Text>
+                </View>
+                <Header searchBar rounded androidStatusBarColor="#000000" style={styles.cabecalho}>
+                    <Item>
+                        <Icon name="search" style={{ fontSize: 20, color: '#FFD700' }} />
+                        <Input placeholder="Buscar cinemas" />
+                        <Icon name="theaters" style={{ fontSize: 20, color: '#FFD700' }} />
+                    </Item>
+                </Header>
             <View style={styles.container}>
-
                 <MapView
 
                     ref={map => this.mapView = map}
@@ -169,7 +169,7 @@ export default class Cinemas extends React.Component {
                 </MapView>
 
             </View>
-
+            </Container>
         );
 
     }
@@ -234,5 +234,13 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
 
     },
-
+    cabecalho:{
+        backgroundColor: "#000000"
+    },
+    title: {
+        color: 'white',
+        fontSize: 25,
+        fontFamily: 'serif',
+        marginLeft: '37%'
+      }
 });
