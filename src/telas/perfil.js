@@ -104,7 +104,7 @@ export default class Perfil extends Component {
               >
                 <View>
                   <Icon name="local-activity" size={80} color="#FFD700" style={perfil2.IconCardMiddle} />
-                  <Text style={perfil2.TextNotf}>Descontos</Text>
+                  <Text style={perfil2.TextNotf}>Ingressos</Text>
                 </View>
               </TouchableOpacity>
             </Row>

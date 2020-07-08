@@ -24,7 +24,7 @@ const FilmStack = createStackNavigator({
       tabBarLabel: 'filmes',
       showIcon: true,
       tabBarIcon: ({ tintColor }) => (
-        <Icon name="movie" size={20} color={tintColor} />
+        <Icon name="movie" size={30} color={tintColor} />
       )
     },
   },
@@ -42,7 +42,7 @@ const Tabs = createBottomTabNavigator({
       showIcon: true,
       tabBarLabel: 'Feed',
       tabBarIcon: ({ tintColor }) => (
-        <Icon name="home" size={20} color={tintColor} />
+        <Icon name="home" size={30} color={tintColor} />
       )
     },
   },
@@ -52,7 +52,7 @@ const Tabs = createBottomTabNavigator({
       tabBarLabel: 'filmes',
       showIcon: true,
       tabBarIcon: ({ tintColor }) => (
-        <Icon name="movie" size={20} color={tintColor} />
+        <Icon name="movie" size={30} color={tintColor} />
       )
     },
   },
@@ -62,7 +62,7 @@ const Tabs = createBottomTabNavigator({
       tabBarLabel: 'Cinemas',
       showIcon: true,
       tabBarIcon: ({ tintColor }) => (
-        <Icon name="store" size={20} color={tintColor} />
+        <Icon name="store" size={30} color={tintColor} />
       )
     }
   },
@@ -72,7 +72,7 @@ const Tabs = createBottomTabNavigator({
       tabBarLabel: 'Perfil',
       showIcon: true,
       tabBarIcon: ({ tintColor }) => (
-        <Icon name="person" size={20} color={tintColor} />
+        <Icon name="person" size={30} color={tintColor} />
       )
     },
   },
@@ -82,6 +82,7 @@ const Tabs = createBottomTabNavigator({
       backgroundColor: 'black'
     },
     activeTintColor: '#FFD700',
+    showLabel: false
   }
 });
 

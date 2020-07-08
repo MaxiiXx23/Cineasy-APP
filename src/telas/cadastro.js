@@ -28,7 +28,7 @@ export default class cadastro extends Component {
   }
   _login = async () => {
     const api = ip;
-    fetch(api +'/usuarios/login', {
+    fetch(`${api}/usuarios/login`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',

@@ -63,7 +63,7 @@ export default class Home extends React.Component {
     const idUser = this.state.idUser
     const idPost = this.state.id
     if (this.lastTap && (now - this.lastTap) < DOUBLE_PRESS_DELAY) {
-      return fetch( api + '/posts/confirmalike/' + idUser + '/' + idPost)
+      return fetch(api + '/posts/confirmalike/' + idUser + '/' + idPost)
         .then((response) => response.json())
         .then((json) => {
           if (json.mensagem == '1') {
@@ -134,7 +134,7 @@ export default class Home extends React.Component {
         );
       });
   }
-  _addlike = async () =>{
+  _addlike = async () => {
     const api = ip;
     const like = this.state.like
     const idPost = this.state.id
@@ -164,9 +164,9 @@ export default class Home extends React.Component {
           ToastAndroid.CENTER,
         );
       });
-      this.loadRepositories();
+    this.loadRepositories();
   }
-  _removelike = async () =>{
+  _removelike = async () => {
     const api = ip;
     const like = this.state.like
     const idPost = this.state.id
@@ -196,7 +196,7 @@ export default class Home extends React.Component {
           ToastAndroid.CENTER,
         );
       });
-      this.loadRepositories();
+    this.loadRepositories();
   }
   _pause = async () => {
     this.setState({
@@ -228,12 +228,12 @@ export default class Home extends React.Component {
                 <CardItem style={styles.card} >
                   <Left>
                     <TouchableWithoutFeedback
-                     onPress={() => this.props.navigation.navigate('PerfilEmpresa', {
-                      itemId: item.id_user
-                    })}>
-                    <Thumbnail source={{ uri: this.state.api + '/fotoperfil/'+ item.fotoUser }} 
-                     />
-                     </TouchableWithoutFeedback>
+                      onPress={() => this.props.navigation.navigate('PerfilEmpresa', {
+                        itemId: item.id_user
+                      })}>
+                      <Thumbnail source={{ uri: this.state.api + '/fotoperfil/' + item.fotoUser }}
+                      />
+                    </TouchableWithoutFeedback>
                     <Body>
                       <Text style={{ fontWeight: 'bold', color: "#fff" }}>{item.nomeFantasia}</Text>
                       <Text style={{ color: "#fff" }} note>{item.note}</Text>
@@ -287,7 +287,12 @@ export default class Home extends React.Component {
               return <Card style={styles.card} >
                 <CardItem style={styles.card} >
                   <Left>
-                    <Thumbnail source={{ uri: this.state.api + '/fotoperfil/'+ item.fotoUser }} />
+                    <TouchableWithoutFeedback
+                      onPress={() => this.props.navigation.navigate('PerfilEmpresa', {
+                        itemId: item.id_user
+                      })}>
+                      <Thumbnail source={{ uri: this.state.api + '/fotoperfil/' + item.fotoUser }} />
+                    </TouchableWithoutFeedback>
                     <Body>
                       <Text style={{ fontWeight: 'bold', color: "#fff" }}>{item.nomeFantasia}</Text>
                       <Text style={{ color: "#fff" }} note>{item.note}</Text>
@@ -299,7 +304,7 @@ export default class Home extends React.Component {
                     this._pause();
                     this._fullScrenn();
                   }}>
-                    <Video source={{ uri: + api + '/posts/' + item.img_post }}
+                    <Video source={{ uri: api + '/posts/' + item.img_post }}
                       ref={(ref) => {
                         this.player = ref
                       }}

@@ -30,7 +30,7 @@ export default class Postimagem extends Component {
     return fetch(api + '/posts/post/' + id_post)
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log(responseJson[0].img_post)
+        console.log(responseJson[0].tipo_file)
         this.setState({
           note: responseJson[0].note,
           img_post: responseJson[0].img_post,
